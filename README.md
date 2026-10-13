@@ -71,6 +71,15 @@ droidspaces_ns: Unknown symbol mq_init_ns (err -2)
 加载器要求内核 release 与 BTF SHA-256 同时匹配，并在激活后运行用户态检查，
 据此把简介更新为 `[已加载]`、`[部分加载]`、`[加载失败]` 或 `[不支持]`。
 
+安装：把 ZIP 装进 KernelSU 管理器后**重启**，`service.sh` 会在开机时加载并自检。
+当前若只是手动 `insmod`，模块已永久 pin，重启后即失效——重启前后该做什么、如何确认、
+常见失败原因见 [zorn 6.1 设备包 · 安装与重启](docs/zorn-6.1.md#安装与重启)。
+本包只补 PID / IPC namespace 与 POSIX mqueue；`devtmpfs`、user namespace
+（Sandboxing）在本机同样为 `n`，不在本包范围内。
+
+为什么一个 `.ko` 能补上编译期缺失的内核子系统：入口替换、符号解析、syscall 表
+接管、生命周期引用与失败回滚的完整说明见 [实现机制](docs/mechanism.md)。
+
 ## GKI v0.2.0
 
 下列六组构建和通用安装流程属于 v0.2.0，仅提供 PID / IPC namespace。

@@ -74,6 +74,63 @@ python3 scripts/package-zorn.py
 | `[部分加载]` | namespace 已激活，但用户态检查未通过 |
 | `[不支持]` / `[加载失败]` | 内核不匹配或载荷/加载器失败，未接管任何入口 |
 
+## 安装与重启
+
+**当前这台设备上的模块是手动 `insmod` 加载的，并且已经永久 pin。重启后它会消失，
+内核回到原状（`/proc/self/ns` 里没有 `pid` / `ipc`），Droidspaces 会重新报缺 2 项
+必需能力。** 这是预期行为，不是故障。
+
+要让它在每次开机自动生效，安装 Release 里的 ZIP：
+
+1. 把 `Droidspaces-LKM-KernelSU-v0.3.0-zorn.zip` 拷到手机；
+2. KernelSU 管理器 → 模块 → 从本地安装 → 选择该 ZIP；
+3. **重启设备**（KernelSU 模块在重启后由 `post-fs-data.sh` / `service.sh` 生效）；
+4. 开机后确认管理器简介显示 `[已加载]`。
+
+注意：
+
+- 安装包沿用模块 ID `droidspaces_lkm`，与 PLZ110 的 v0.1.5 包**相同**。两个包
+  面向不同内核（6.12.69 canoe vs 6.1.138 zorn），不要同时安装；装错的那个会因为
+  内核/BTF 不匹配而拒绝加载，并在简介写明原因。
+- 模块激活后永久 pin，`rmmod` 不成立。**卸载、替换版本、改 `common.sh` 都需要重启
+  才生效**：先重启，再在管理器里改动，然后再次重启。
+- 本包不修改 boot 分区，不写开机服务到别处，全部逻辑通过 KernelSU 模块目录下的
+  `post-fs-data.sh` / `service.sh` 执行。
+
+## 重启后如何确认
+
+```sh
+su -c 'ls /proc/self/ns'                       # 应含 pid, pid_for_children, ipc
+su -c 'cat /sys/module/droidspaces_ns/parameters/activate'   # 应为 Y
+su -c 'cat /data/adb/modules/droidspaces_lkm/status.txt'     # 简介文本
+su -c 'cat /data/adb/modules/droidspaces_lkm/load.log'       # 本次开机日志
+su -c '/data/local/Droidspaces/bin/droidspaces check'        # 必需项应全部 ✓
+```
+
+`service.sh` 每次开机都会把 `nsprobe` 的输出追加进 `load.log`，因此日志里应当能看到
+`PASS sysv-create` … `PASS pidns-init-is-pid1` 这一整段。
+
+## 故障排查
+
+| 现象 | 原因与处理 |
+| --- | --- |
+| 简介 `[不支持]` | 内核 release 或 BTF SHA-256 与验证目标不一致（常见于系统 OTA 之后）。确认 `uname -r` 与 `/sys/kernel/btf/vmlinux` 的 sha256；若已升级内核，需要按新内核重新构建 |
+| 简介 `[加载失败]` | 载荷缺失/校验失败，或 `ksud insmod` 返回非 0。看 `load.log` |
+| 简介 `[部分加载]` | namespace 已激活但 `nsprobe` 有 `FAIL`。看 `load.log` 中探针输出的失败项 |
+| 开机后 `/proc/self/ns` 没有 `pid` | 模块未生效：确认模块已启用、已重启、`load.log` 里有 `entry preflight passed` |
+| `dmesg \| grep droidspaces` 出现 `Unknown symbol` | 装成了不匹配的载荷（例如官方 `android14-6.1` GKI 包）。改用本设备包 |
+| `[!] Hardware access mode ... does not support devtmpfs` | 本机 `CONFIG_DEVTMPFS=n`，本包不含该项实现。容器会退回 tmpfs，`/dev` 内容变少、GPU/部分硬件节点可能缺失，但容器正常启动与使用 |
+| `[✗] Sandboxing (user namespaces)` | 本机 `CONFIG_USER_NS=n`，需要 `--allow-sandboxing` 的负载（Docker/Podman/Bubblewrap）不可用 |
+
+## 内核更新之后
+
+模块把入口替换成**编译时确定的绝对地址与结构体偏移**，因此任何内核变化都必须重新
+构建与验证：换 DDK 源码树/`vmlinux` 的布局输入、重新编译、重新比对设备 BTF、
+更新 `kernelsu-zorn/common.sh` 里的 `uname -r` 与 BTF 指纹，然后重新打包。
+不要通过放宽加载器检查来"兼容"另一个内核。
+
+实现细节见 [实现机制](mechanism.md)。
+
 ## 验证范围
 
 已验证（真机，SELinux Enforcing，`activate=1`）：
