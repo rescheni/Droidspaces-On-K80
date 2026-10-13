@@ -80,6 +80,19 @@ droidspaces_ns: Unknown symbol mq_init_ns (err -2)
 为什么一个 `.ko` 能补上编译期缺失的内核子系统：入口替换、符号解析、syscall 表
 接管、生命周期引用与失败回滚的完整说明见 [实现机制](docs/mechanism.md)。
 
+## 容器里的 Linux 桌面
+
+namespace 装上之后，Droidspaces 容器可以跑真正的图形桌面。本机用
+Termux:X11（`com.termux.x11`）+ 容器内 bspwm 打通，一键脚本
+[`scripts/x11-desktop.sh`](scripts/x11-desktop.sh)，开机自启走 KernelSU 的
+`/data/adb/service.d/`。
+
+两个必须知道的坑：Android 14+ 要求 `loader.apk` 只读（否则 `app_process` 以
+`Writable dex file ... is not allowed` abort），以及 **X server 必须先于容器启动**
+（Droidspaces 按文件 bind-mount socket，顺序错了容器会绑到已删除的 inode）。
+完整安装步骤、故障对照表与 anland 路线对比见
+[Droidspaces Linux 桌面](docs/x11-desktop.md)。
+
 ## GKI v0.2.0
 
 下列六组构建和通用安装流程属于 v0.2.0，仅提供 PID / IPC namespace。
