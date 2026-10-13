@@ -1,0 +1,23 @@
+#!/bin/bash
+set -eux
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+trap 'rc=$?; echo DS_NETFILTER_VM_RESULT=$rc; /busybox poweroff -f' EXIT
+/load-module /netfilter.ko
+rmmod droidspaces_netfilter
+/load-module /netfilter.ko
+unshare -n /bin/sh /netfilter-rules
+test -z "$(nft list ruleset)"
+rmmod droidspaces_netfilter
+echo DS_NETFILTER_UNLOAD_PASS
+/load-module /netfilter.ko
+# Packet tests run in a dedicated network namespace, including Docker rules.
+unshare -nm --propagation private /bin/bash /netfilter-packets
+# net namespace teardown and nft expression destruction run asynchronously.
+for i in $(seq 1 30); do
+    test "$(cat /sys/module/droidspaces_netfilter/refcnt)" = 0 && break
+    sleep 1
+done
+rmmod droidspaces_netfilter
+sleep 5
+test "$(cat /sys/module/droidspaces_ns/parameters/pid_live)" = 0
+test "$(cat /sys/module/droidspaces_ns/parameters/userns_live)" = 0

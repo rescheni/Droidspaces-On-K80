@@ -1,0 +1,58 @@
+Android 17 / Linux 6.18 GKI namespace port
+
+Pinned DDK: ghcr.io/ylarod/ddk-min@sha256:fb8b66200bf402cf65a751060fc1aa29524b9fa8840feef16c7b196a4f3f0e6e
+Tag: android17-6.18-20260828
+Native source directory: /opt/ddk/src/android17-6.18
+Kernel release: 6.18.32-4k-g47cc22554442-dirty
+Configuration: PID_NS=n, SYSVIPC=n, POSIX_MQUEUE=n, 4K pages,
+KCFI (CONFIG_CFI), ARM64 BTI and shadow call stack.
+
+The 6.12 transplantation was merged with this DDK's native 6.18 sources.
+Native baseline source SHA-256:
+5176a10ff37810d64ffe06668bd37dd37c0a76c0c9943f1f987bca2ecc66e839  kernel/pid_namespace.c
+1c57fa4b4959f66e436b06a7feff05e42dad281772d1b888c4f2247234635923  ipc/namespace.c
+bca82935bade97ccd9413aa357ad720f1e6431babbb7f3570b7b5e5baf950972  kernel/nsproxy.c
+5ea94a3f2f86054cf1dcdfea216ce6e41236eb8c1ce77abe8826862beed8072b  kernel/pid.c
+e0ea1498f3206cab6caeb89ae3beedd738fc94af727029db15a921caf2be8d05  kernel/exit.c
+72168761206b13f4cea486f842e4f968dd2d849b11b4b1b3356b7d5dbd880b83  fs/proc/namespaces.c
+f4e30285ccf32b839fda0c6385f9bb736416d3448c628d9b9456ef2124f519c5  fs/proc/root.c
+660560ebc799c8b47b15fc6fbdf2471652bb8e80031320438571f91fcc8804cd  ipc/util.h
+b596a8cafdaa26f520952ef59cf6845ccd117b9e1722474b62a5b1f2096f8cde  ipc/util.c
+6d60719799bbcdfe547e3979080f4c52da617367027119b8a15ddd2187bb2f65  ipc/compat.c
+98de737ae896e9b5596dd33e1e3908163c58ee93b72a49f618db8640f90d8e0f  kernel/fork.c
+a92b1c3aef651728f275129e0c43309beb1e96a2676a1bf6f75a44c1166c9e9c  fs/fuse/inode.c
+cb5f1c3ed3c71fb64970b447584762d280ef3b27becf007a2286abbde3821929  kernel/cgroup/cgroup-v1.c
+745b6130bbb720d23b8c677b4c5f4ef25cc492c9862e8b2a13492dca4d926623  kernel/bpf/task_iter.c
+f101cabd8649ff835a6a7e64a67ddc563cf177001465f5ccb00a4adad3caeb66  ipc/msg.c
+61af6f212008666f7e7423887c4ee41ba8745942d4170ce521725fe9f0c85f4a  ipc/msgutil.c
+af7372c2b06cd7ff70f85f931e0ad93a32bdad1827a3a8c70ee747d42988c0ab  ipc/sem.c
+c00ed0fc1de2bedba52eadd61f1db355c3d175ee0a187322afba08d23f1c7691  ipc/shm.c
+283cfc6de800dfd239d28cfd70e99c567044bca85951d577688973e8ef535d32  ipc/mqueue.c
+fbc4983ddb334941cec41bf8df4201fdcb79a3a299924a16daf904861dcf43a9  ipc/mq_sysctl.c
+207bf3d7a3cc8eedb0d6f87b16b537cf38083027ebf7aacc6910eaf1b8d7c19d  ipc/ipc_sysctl.c
+9f3dce63262f154ebcc539005a82b5340368ebc81b52b1cf94df0a8a5cb948d9  include/linux/pid_namespace.h
+706d0ff0bd641f157c7c37290c25251bf782e7ea36452f1ab5eedf1f8ea78a50  fs/pidfs.c
+23bb3eaa238ca679ed254361bc7bdb5c079dd9de06ea16af05053aedafa746a3  mm/memfd.c
+2c121036fa4369b6ab65a0f43990816b150a2f56127429c90df7a2f35c9280f1  kernel/events/core.c
+6078ed7df86864ac26c51a2694f66a977bd732f260f24315d2a4432180a0ee7b  kernel/pid_sysctl.h
+410d01f324c614dcd276a3f4d740fc4688a20ab65dfcddbc019e2dbbf21cec26  include/linux/ns_common.h
+be31f7b2c321fd9c07415f0955f3c4ff2de751c3eaed74d8c926784236e68c1c  kernel/nscommon.c
+bea4cabb18d8bb6d8ca5eac105c6f48c3a4db7e85aac0f23b60d6943ac256108  include/linux/nstree.h
+0b6dd7cce0528262b8d6a0fe3fc49b4fa633149bf519774df74e0938c2bbea33  kernel/nstree.c
+
+Adaptations:
+- Separate 6.18 PID/IPC, procfs, task exit, allocation, fork and IPC backend implementations.
+- Retain native release_task_post, pidmap seqcount lock and per-namespace pid_max.
+- Use ns_common references/initialization and native namespace trees; register initial PID/IPC
+  namespace roots only once all activation patches have succeeded.
+- Shared host state stays external; missing SysV task fields use a lifecycle-managed side table.
+- Disable duplicate boot initcalls and provide explicit backend init/exit with deferred cleanup.
+- Restore namespace references for perf, BPF task iterator, cgroup-v1 pidlist and FUSE.
+- Preserve the native FUSE io_uring teardown and connection initialization fields.
+- Handle PID/IPC pidfd namespace ioctls and forward other pidfd commands to the native body.
+- Validate KCFI signatures, callback targets and original prologues before patching.
+- Keep BTI landing instructions and native KCFI prefixes; original trampolines return with a
+  range-checked direct branch, preserving PAC/SCS and avoiding indirect branches mid-function.
+- Replace native ARM64 syscall slots under stop_machine; no 32-bit IPC implementation.
+- SHM_HUGETLB rejected with EOPNOTSUPP; native memfd allocation and sealing retained.
+- Module activation is pinned until reboot. GKI family opt-in and userspace ABI checks are required.

@@ -1,0 +1,38 @@
+#!/bin/sh
+# SPDX-License-Identifier: GPL-2.0-only
+# Run only in a disposable network namespace (the VM runner provides one).
+set -eu
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+ip link set lo up
+nft add table inet ds_rules
+nft 'add chain inet ds_rules output { type filter hook output priority 0; policy accept; }'
+nft 'add set inet ds_rules blocked { type ipv6_addr; }'
+nft 'add rule inet ds_rules output ip6 daddr @blocked counter drop'
+nft 'add element inet ds_rules blocked { ::1 }'
+if /busybox ping6 -c 1 -W 1 ::1 >/dev/null 2>&1; then echo DS_NFT_DROP_FAILED; exit 1; fi
+nft 'delete element inet ds_rules blocked { ::1 }'
+/busybox ping6 -c 1 -W 1 ::1 >/dev/null
+# Failed batches must not leave their earlier operations committed.
+if printf 'add chain inet ds_rules rollback\nadd rule inet ds_rules ds_nonexistent counter\n' | nft -f -; then
+    echo DS_NFT_ROLLBACK_FAILED; exit 1
+fi
+if nft list chain inet ds_rules rollback >/dev/null 2>&1; then exit 1; fi
+nft list table inet ds_rules
+nft delete table inet ds_rules
+mkdir -p /tmp/ds-netfilter-http
+printf 'inet-nat-ok\n' >/tmp/ds-netfilter-http/index.html
+python3 -m http.server 18081 --bind ::1 --directory /tmp/ds-netfilter-http >/tmp/ds-http6.log 2>&1 &
+http6=$!
+python3 -m http.server 18081 --bind 127.0.0.1 --directory /tmp/ds-netfilter-http >/tmp/ds-http4.log 2>&1 &
+http4=$!
+trap 'kill "$http4" "$http6" 2>/dev/null || true; wait || true' EXIT
+nft add table inet ds_nat
+nft 'add chain inet ds_nat output { type nat hook output priority -100; policy accept; }'
+nft 'add rule inet ds_nat output ip daddr 127.0.0.1 tcp dport 18082 counter dnat ip to 127.0.0.1:18081'
+nft 'add rule inet ds_nat output ip6 daddr ::1 tcp dport 18082 counter dnat ip6 to [::1]:18081'
+sleep 1
+test "$(curl --noproxy '*' -fsS http://127.0.0.1:18082)" = inet-nat-ok
+test "$(curl --noproxy '*' -gfsS 'http://[::1]:18082')" = inet-nat-ok
+nft list table inet ds_nat
+nft delete table inet ds_nat
+echo DS_NFT_RULES_PASS

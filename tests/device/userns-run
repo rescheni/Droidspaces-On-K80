@@ -1,0 +1,44 @@
+#!/system/bin/sh
+# No module loading, reboot or changes to existing Droidspaces containers.
+set -eu
+base=${DS_USERNS_TEST_DIR:-/data/local/tmp/droidspaces-userns-test}
+[ "$(id -u)" = 0 ]
+[ "$(uname -r)" = 6.12.69-android16-6-g242e1a07f878-ab15865446-4k ]
+[ "$(getenforce)" = Enforcing ]
+export DS_USERNS_PREPARE_ONLY=0
+case "${1:---test}" in
+    --smoke) DS_USERNS_PREPARE_ONLY=1;;
+    --test)
+        [ "$(cat /sys/module/droidspaces_ns/parameters/activate)" = Y ]
+        [ -r /sys/module/droidspaces_ns/parameters/userns_live ]
+        [ "$(cat /sys/module/droidspaces_ns/parameters/userns_live)" = 0 ];;
+    *) exit 2;;
+esac
+cd "$base"
+sha256sum -c SHA256SUMS
+# The test mount tree and network disappear when the runner and its children exit.
+exec "$base/busybox" unshare -m -n -- "$base/busybox" sh -eu -c '
+    base=${DS_USERNS_TEST_DIR:-/data/local/tmp/droidspaces-userns-test}
+    bb=$base/busybox
+    "$bb" mount --make-rprivate /
+    mkdir -p "$base/root"
+    "$bb" mount -t tmpfs -o size=256m,mode=0755 userns-test "$base/root"
+    "$bb" tar -xzf "$base/runtime.tar.gz" -C "$base/root"
+    "$bb" cp "$base/userns-tests" "$base/root/device-tests"
+    # A plain chroot correctly blocks CLONE_NEWUSER. Give the test namespace
+    # its own actual root, then detach the old Android mount tree locally.
+    mkdir "$base/root/old-root"
+    cd "$base/root"
+    "$bb" pivot_root . old-root
+    cd /
+    /bin/umount -l /old-root
+    /bin/rmdir /old-root
+    if [ "$DS_USERNS_PREPARE_ONLY" = 1 ]; then
+        /bin/mount -t proc proc /proc
+        /bin/mount -t sysfs sysfs /sys
+        test -r /proc/self/status
+        echo DS_USERNS_DEVICE_ROOT_PASS
+        exit 0
+    fi
+    exec /bin/sh /device-tests
+'

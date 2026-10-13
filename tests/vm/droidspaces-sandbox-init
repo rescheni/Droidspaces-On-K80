@@ -1,0 +1,3 @@
+#!/bin/sh
+trap 'exit 0' TERM INT PWR
+while :; do sleep 3600 & wait "$!"; done

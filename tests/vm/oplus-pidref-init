@@ -1,0 +1,21 @@
+#!/bin/sh
+export PATH=/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+echo 0 >/proc/sys/kernel/kptr_restrict
+fail() { echo DS_OPLUS_VM_RESULT=1; poweroff -f; }
+/load-module /namespace.ko activate=1 || fail
+# Fail closed on a callback differing by one instruction.
+/load-module /fixture.ko bad=1 || fail
+if /load-module /compat.ko; then fail; fi
+test ! -d /sys/module/droidspaces_compat || fail
+rmmod oplus_sys_stability_helper || fail
+/load-module /fixture.ko || fail
+if grep -q 'ds_negative=1' /proc/cmdline; then
+    /oplus-pidref negative || fail
+else
+    /load-module /compat.ko || fail
+    /oplus-pidref || fail
+fi
+echo DS_OPLUS_VM_RESULT=0
+poweroff -f

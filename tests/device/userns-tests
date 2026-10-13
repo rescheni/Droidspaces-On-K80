@@ -1,0 +1,41 @@
+#!/bin/sh
+# Run only inside the disposable test root made by userns-run.
+set -eu
+export PATH=/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+loop_device=
+cleanup() {
+    /droidspaces --name=lkm-sandbox stop >/dev/null 2>&1 || true
+    umount /test-ext4 2>/dev/null || true
+    [ -z "$loop_device" ] || losetup -d "$loop_device" 2>/dev/null || true
+}
+trap cleanup EXIT
+/userns-fuse-test
+/userns-fuse-test --sandbox
+/userns-fuse-io-test
+/userns-fuse-io-test --mapped
+/userns-fuse-io-test --retained
+/userns-live-test
+loop_device=$(losetup -f)
+# Android can reserve multiple minor numbers per loop device for partitions.
+# Read its actual device number instead of assuming minor == loop index.
+IFS=: read -r loop_major loop_minor < "/sys/class/block/${loop_device##*/}/dev"
+rm -f "$loop_device"
+mknod "$loop_device" b "$loop_major" "$loop_minor"
+losetup "$loop_device" /filecaps.ext4
+mount -t ext4 "$loop_device" /test-ext4
+/userns-policy-test
+umount /test-ext4
+losetup -d "$loop_device"
+loop_device=
+/sandbox-test
+/sandbox-test --fuse
+/sandbox-test --all
+host_limit=$(cat /proc/sys/user/max_user_namespaces)
+/sandbox-test --disable-userns
+test "$(cat /proc/sys/user/max_user_namespaces)" = "$host_limit"
+/droidspaces-sandbox
+sleep 1
+test "$(cat /sys/module/droidspaces_ns/parameters/userns_live)" = 0
+echo DS_USERNS_DEVICE_PASS

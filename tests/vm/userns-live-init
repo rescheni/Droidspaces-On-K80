@@ -1,0 +1,48 @@
+#!/bin/sh
+export PATH=/bin
+# pivot_root rejects the initial rootfs, independently of user namespaces.
+# Give real sandbox programs the ordinary mounted root they expect.
+if [ -f /sandbox-enabled ] && [ ! -f /sandbox-root-ready ]; then
+    mkdir /newroot
+    mount -t tmpfs sandbox-root /newroot || { echo DS_USERNS_LIVE_VM_RESULT=1; poweroff -f; }
+    for entry in /*; do
+        [ "$entry" = /newroot ] || cp -a "$entry" /newroot/
+    done
+    touch /newroot/sandbox-root-ready
+    exec switch_root /newroot /init
+fi
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+echo 0 > /proc/sys/kernel/kptr_restrict
+run_tests() {
+    if [ -f /hma.ko ]; then /load-module /hma.ko "setuid_tier=inline uid_tier=inline" || return 1; fi
+    /userns-fuse-test || return 1
+    /load-module /namespaces.ko activate=1 || return 1
+    /userns-fuse-test || return 1
+    /userns-fuse-test --sandbox || return 1
+    /userns-fuse-io-test || return 1
+    /userns-fuse-io-test --mapped || return 1
+    /userns-fuse-io-test --retained || return 1
+    /userns-live-test || return 1
+    mount -t ext4 -o loop /filecaps.ext4 /test-ext4 || return 1
+    /userns-overlay-test || return 1
+    /userns-policy-test || return 1
+    umount /test-ext4 || return 1
+    if [ -f /sandbox-enabled ]; then /sandbox-test || return 1; /sandbox-test --fuse || return 1; fi
+    if [ -f /sandbox-all-enabled ]; then
+        /sandbox-test --all || return 1
+        host_limit=$(cat /proc/sys/user/max_user_namespaces)
+        /sandbox-test --disable-userns || return 1
+        test "$(cat /proc/sys/user/max_user_namespaces)" = "$host_limit" || return 1
+    fi
+    if [ -x /droidspaces-sandbox ]; then /droidspaces-sandbox || return 1; fi
+    unshare -ip true || return 1
+    sleep 1
+    cat /sys/module/droidspaces_ns/parameters/userns_live
+    test "$(cat /sys/module/droidspaces_ns/parameters/userns_live)" = 0 || return 1
+    dmesg | tail -n 15
+}
+run_tests
+result=$?
+echo "DS_USERNS_LIVE_VM_RESULT=$result"
+poweroff -f

@@ -1,0 +1,529 @@
+{
+  "release": "6.12.69-android16-6-g242e1a07f878-ab15865446-4k",
+  "version": "v0.1.2",
+  "kernel_source_commit": "68df04e1140b36142209bf72b32dae5621ebe76d",
+  "ddk": "ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a",
+  "namespace_build": "./scripts/build-ddk.sh TARGET=namespace USERNS=1 OUT=/module/out/userns-device-test -j2; scripts/abi/prepare-device-vm.py modinfo adaptation",
+  "health_build": "./scripts/build-userns-health.sh",
+  "devtmpfs_provenance": "Unchanged v0.1.1 device-tested payload; build/plz110-0.1.1.json on that tag",
+  "inputs": {
+    "namespace": {
+      "path": "out/userns-device-test/hma-chain/droidspaces_ns.ko",
+      "sha256": "74c62c6a072beff3e29d638005f77465a45182fe3c40034fec5a2b2d13bb805a"
+    },
+    "gki_namespace": {
+      "path": "out/userns-device-test/droidspaces_ns.ko",
+      "sha256": "348b265f738f95f77d05fa8e10e7e8769642b57077db0a6d5cba67d386f85dc6"
+    },
+    "devtmpfs": {
+      "path": "out/userns-device-test/stage/droidspaces_devtmpfs.ko",
+      "sha256": "7146e136fc4281e31c58f04ccae31fc0ec2e1b83e9e460b5e6e98355f9a16a00"
+    },
+    "health": {
+      "path": "out/userns-device-test/userns-check",
+      "sha256": "256813465c2c82b5794ad7b15fd0fbc2d265843d177d76f1aae4015927e31e9e"
+    },
+    "device_btf": {
+      "path": "out/device/vmlinux.btf",
+      "sha256": "1870e245673b3eaae0d1fdafb0fd7027888b638018ed9561943a51dc2539d6af"
+    },
+    "module_btf": {
+      "path": "out/userns-device-test/module.btf",
+      "sha256": "a8c1ce93a9d355c2129eeae357dd941f63bbcdfcef649c43ca9cf85e5db4beb5"
+    },
+    "abi": {
+      "path": "out/userns-device-test/device-abi.json",
+      "sha256": "cc995ccfa9a9b9363653f9a86e99f4e4f07beecc6247fe1709c6b5f20ddd548f"
+    },
+    "device_image": {
+      "path": "out/userns-device-test/hma-chain/Image",
+      "sha256": "695cd037054aa9c4bb521694cc8eba261eff3aea51de21ec29a1101ea2bf2964"
+    },
+    "gki_image": {
+      "path": "out/gki/android16-6.12/Image",
+      "sha256": "9063c74899985ad72dd66b2a523298625edff049f3641a2dfa693dbe5a58d52a"
+    },
+    "gki_console": {
+      "path": "out/userns-device-test/hma-gki-vm/console.log",
+      "sha256": "8f5f28bae7d05e4e22ffe5e7ad821fb823af5be81533633843acb21b6485e78b"
+    },
+    "plz110_console": {
+      "path": "out/userns-device-test/hma-plz110-vm/console.log",
+      "sha256": "c9cafe6c3e3eef6309173c98ac17488519a3356cdbdacf21e49716ac3d81f618"
+    },
+    "device_console": {
+      "path": "out/userns-device-test/device-test-hma-loop-minor.log",
+      "sha256": "cc72326b3fe7a0887963e7833ee1774c536408b69c01fdfb2201ecb0d01be850"
+    },
+    "load_console": {
+      "path": "out/userns-device-test/device-load-hma.log",
+      "sha256": "bc23f84b75ccb581d355c5c1c06fb68ae7d85825f2a6f1a985b6296141712698"
+    },
+    "health_console": {
+      "path": "out/userns-device-test/device-health.log",
+      "sha256": "891748cecff3b961d61deb729a9cd4bfc50604479c03335e8744f3fada7371b8"
+    },
+    "loader_console": {
+      "path": "out/userns-device-test/device-loader.log",
+      "sha256": "031f66a5b6126bd7b75eaeaed71d18928e80d9d75c96b4b48f02bc05a729b019"
+    },
+    "devtmpfs_console": {
+      "path": "out/userns-device-test/device-devtmpfs.log",
+      "sha256": "7b6c6b3110f381d7b270a0fada6458e7e73239f7c7dc267f9d6dfa0c0d90c660"
+    },
+    "pid_ipc_console": {
+      "path": "out/userns-device-test/device-pid-ipc.log",
+      "sha256": "976ab8ddd318f8eafb14a8ce131e26963ead104e7117d47a3acecb0e4e8b962f"
+    },
+    "runtime": {
+      "path": "out/userns-device-test/runtime.tar.gz",
+      "sha256": "ef97a20dd06c557509e0b92373c2c662f90e7be068a64f04c9018b562a64b24a"
+    },
+    "pid_test": {
+      "path": "out/device/tests/namespaces",
+      "sha256": "8ad5602662371e3dda931c509f6c8795894b94eb075a8af57f052322502bf6a4"
+    },
+    "ipc_test": {
+      "path": "out/device/tests/ipc",
+      "sha256": "67d8a69f3f8199ef45f67923085907dfb18a4192c18550710a5cd9ea15b26cf8"
+    },
+    "mqueue_test": {
+      "path": "out/device/tests/mqueue",
+      "sha256": "e59c687f53a94f0f1ba4f84e2bbe8ffe16118fde23471913244b98ddbdf06e77"
+    },
+    "devtmpfs_test": {
+      "path": "out/devtmpfs/device-test",
+      "sha256": "3684e93b69b8f8f84f982d60aed4d83bdeb32f2e419c661356ef3377d88eac17"
+    },
+    "devtmpfs_fixture": {
+      "path": "out/devtmpfs/device-vm/droidspaces_devtmpfs_fixture.ko",
+      "sha256": "e6472f90b3e28c58bf40c752b7a962b2879307ef687315e86138dc886d15b0e9"
+    },
+    "device_final_console": {
+      "path": "out/userns-device-test/device-final.log",
+      "sha256": "fe6680e0771767e20225c045f2f2bf38a27785909a89df06d83cec7956b99a93"
+    }
+  },
+  "sources": {
+    "Makefile": "3fb46adc6cb28b2da6dfe78d04e4dd619bdc53db16b606610a7b22cae6dd46fc",
+    "docs/releases-v0.1.2.md": "0e1ffebef0ed2bc42a2908277e31e5d4669c609a0be69b1e20d54573fd17a63a",
+    "kernelsu-plz110/common.sh": "907641e6c9276ffc6c67e90c4f6d569cf2bef2b78e96d737b72eb20f0c108a1b",
+    "kernelsu-plz110/customize.sh": "06ec782f6c4f59972aaaddb0cca51d896f9066603ce7f55673e49365583cca8e",
+    "kernelsu-plz110/module.prop": "f43408435a5a5bbe493ab62df4ba1781eb2301fd38444432134875a77bf29b03",
+    "kernelsu-plz110/post-fs-data.sh": "fec117e363e0420ff8a9f6b8daffbfb333987e6490b90d18a173db986fd100bf",
+    "kernelsu-plz110/service.sh": "7ec24ada186327fd4833c50f7299a695982ec4744c49d69d32ec3c9b97ee2e73",
+    "kernelsu-plz110/skip_mount": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/abi/compare-btf.py": "49335eaab975ca4f2a5bd20fd2684d8faa44ec27c38c6b81ea1b44b6942c1be2",
+    "scripts/abi/make-constraints.py": "c324da15c6f5164c38639cd4025771798f2df372ab753e4ccf2d42a50dc443a2",
+    "scripts/abi/prepare-device-vm.py": "49c6da9e9776719a3aeb2aa2e040e7c0626e3f9524e1af43babc86cd671b2e05",
+    "scripts/abi/prepare-plc110-6.6-vm.py": "e4bcdb635c9dbdfd4e75d816e467b7d7a4fbeb6a6352ce9a8d2538eccd8ca3e5",
+    "scripts/build-ddk.sh": "915dc7c3db7c83969bad3b7e20f059361213b70762301720fc0fab76ffa9823e",
+    "scripts/build-userns-health.sh": "b0d485e16314315009915d9f2bf083946758bc058002135a71da020cd3451799",
+    "scripts/package-module.py": "1af5cf06a9dd7eef997946c9e9ce5f4caebc1e91cc3c05eda4a0330aa6f78503",
+    "scripts/package-plz110-sandbox.py": "b099886e28101ca58ca5559f7f5b75f427872606ab57bb5987c5e32ff82ab06e",
+    "src/devtmpfs/ORIGIN": "c10c88bc9b0a3fd9b333cc22f177e0047386b2b61b3fb7544a0f6d022afac004",
+    "src/devtmpfs/devtmpfs.c": "f0aabfddde1c01379d8d610bbdeb1198ac210b5ad6860d8285c4aa916023388e",
+    "src/devtmpfs/hooks.c": "36c490f2706af2170d6841fe644f0e64be340a2da3076ead83c1aede35efd554",
+    "src/devtmpfs/main.c": "94236f3bd0b49a21617962332772ebb8886a8d71a8486f8ff5bbed6a1629ed7c",
+    "src/devtmpfs/original.S": "7e6bb5835e9186f1e36b805fad19cb6b84929eac9b279fc2fb99aa15a5f6ef92",
+    "src/devtmpfs/port.h": "79a25a41a81d281b44fa1ce937e7016e218398501ba7cd49f697eb255017d7ef",
+    "src/health/userns.c": "0aff1beab86d5148113c4a0199221fa391452b8365d73ac52e6808ce8445f163",
+    "src/port/ORIGIN": "f89384ee2f0ca0712bbcd21cf05912544f60fdc1e69dc4cf3b70086629d1d9f3",
+    "src/port/bpf-pidns.c": "5d6a1fbd4fb461c2a30f9b1e505168ea5e4da7c9af087f0b775be7976e9c3cc9",
+    "src/port/cgroup-pidlist.c": "754ea591b5dbace14668ed2060a8c0668339c1e243eefcdb4abc908389b6d440",
+    "src/port/exit.c": "47f7faad0c2f5c077d63e7fd66d903ef360fc38e727ae31a4b7ec50a7c55c13e",
+    "src/port/fork.c": "e9c53c3e489252a904725982d0a5228f4652edf6d03cd74dc933a79030c01ecf",
+    "src/port/fuse.c": "a2d5ba5e9c19c888322ef07eac6228515c4526a21658f1f48ee47e1df4aa7fa0",
+    "src/port/hooks.c": "e7d3aea213a3a452b56bc2a3a3966c0792ca67a8bbd9443834dcaaafcfa3ea32",
+    "src/port/ipc-backend.h": "9f081a5582ccf72dfa80c3e84a92a72a823066eb45c61bb8764dcac44f63dffc",
+    "src/port/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port/ipc-task.c": "a42ad78ddffa2a816d24daad71343e71fdbd22597d211481627bd64c1b304aa8",
+    "src/port/ipc-util.c": "8104642e90218cd9d58ca82eb0b316978109c1dda6222f6e424b3a3b2f8f32fa",
+    "src/port/ipc-util.h": "56cac6f8a14c85e1d0d90382b91685955233cbfb1569f3179fca33d6c0634c04",
+    "src/port/ipc.c": "19062214ef668c128f09b492a123234a8c97436741fdcd90747169158b3a61eb",
+    "src/port/ipc_sysctl.c": "a9cae93648e939b40735b343511c6d2b57febe430d6da23b5522eeb510fabb3b",
+    "src/port/main.c": "b2adc446459e13c1eb6c35c1047dbe885c7d66f0010409cda76acf025d30f39e",
+    "src/port/memfd.c": "3753baf991af77f2c1ffc544b8277edd99dc1c700978fa1afeff889a3362475f",
+    "src/port/mq_sysctl.c": "5d7f8c1f55a9f81a486ebf1ab3b20b9812708d903004540be4df4a1c17381510",
+    "src/port/mqueue.c": "c69e7c79d7e238a7da83f32b66634e40ef42d791566eb5b9263423fa7ae8add7",
+    "src/port/msg.c": "c3ac7df2508b106429dfdacb2a44d8580595be5ed8d2ffee7988fe7c120b27ea",
+    "src/port/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port/nsproxy.c": "215f483bd355ab7e904234c1dfe072b053f6e0786bb17b3b8e923c907cf424b4",
+    "src/port/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port/pid.c": "2d70035990216662a2130e32913dc18156c37677312893fee28f97b4119693ef",
+    "src/port/pid_alloc.c": "ccb5237688384c3f3ff654340b2db9fa3f88c884110da073eeeec6376d76d5ea",
+    "src/port/pidfd.c": "9746198bb07dbb5919218e31c50031e08618e60499d1e335a9650cef0149e93c",
+    "src/port/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port/proc_root.c": "687491c5434574f9de5f900dabf38c37b4f47e88aaba860902ccffad8b80e004",
+    "src/port/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port/selftest.c": "1911eb85ac9789934711e2939a4afdd2bacd2beefdf35884f9c211644ce8b9b6",
+    "src/port/sem.c": "24c68e4ad05e21d1e5005fe65fa36e3ac15c22154a7afb39a9feb51872dd0d4c",
+    "src/port/shm.c": "4b20960b5ac1b97cada1e7cb93f5261f7bc26e943f3461784a1be5acc132cd6d",
+    "src/userns/ORIGIN": "360c75388ad8196a8a602e43c463214e127cd45d61b5bba4d661798fe1b981f5",
+    "src/userns/compat/linux/user_namespace.h": "02c718aadd526493cf81063d49c42d77dd119257107985cf2ec243350ae34d5b",
+    "src/userns/credentials.c": "1362a3ddc0f7c0ef321914205377caa2092d3d8224362b9359d0aec45db243b3",
+    "src/userns/live-capabilities.c": "45b48b88f2a3686d6e0381428e26c95d3460396c3dc5e83acf83179baf1786a5",
+    "src/userns/live-cgroup.c": "c11b6992df88a3588a248631fe14afb8eb399ce4c3d36a5add7764e2034f3731",
+    "src/userns/live-credentials.c": "e8abae2c799cde06f779d50079f0efe2e69d24928acfd50a580ababafc7fe0e4",
+    "src/userns/live-exec.c": "cb06203812f8f37c792a7f566cccee0e65a289475d3af3a22e3c13596b43a4c0",
+    "src/userns/live-fs-context.c": "6db129056b8585b05f687bdcd52134d197ffbd87ef462fb89f7ea1e3bb376d0f",
+    "src/userns/live-groups.c": "670caba5cbc53bb4b40da91508a1a6f5755c5b2072dec1cd9c8244ca84f6e95e",
+    "src/userns/live-identity.c": "ddeb636ef7741a172ca78c697b292931e7eba221d53bfd6b0071e742522723c7",
+    "src/userns/live-mm.c": "4515c7a5a3eb66840e0729230e807c4fdd8c016428659491e58f47443f8bfeb5",
+    "src/userns/live-mount.c": "a25ffbf9f3a73b8df865abaa06c884fc41ef2a663a1e5715fc81fa79721af321",
+    "src/userns/live-names.h": "6f96e6438a7a8de59ba1bcd9841559150b78f2d19eabe4179145a69ce1ea7d58",
+    "src/userns/live-netlink.c": "ad810880e3820d8039b3cc4d578db41e3e75b143a589570528220bff730959f6",
+    "src/userns/live-nsfs.c": "6bc249c1df658065affc93d17a2a9f70687a15b6d4df78dcecdbe5d2af354809",
+    "src/userns/live-proc-status.c": "66a1a07dbeaf99b79cf617d28feda98b96cc3b515dee6eb3bf843a916d9ed209",
+    "src/userns/live-proc.c": "24d9a95ce61622fe02d5ede39fa80ce230fa463f347b77ab1ade48b142a85a65",
+    "src/userns/live-scm.c": "53cce93b191f91c59039782da5cc3b710d55da45dfe155a919bcc9ef8f481aad",
+    "src/userns/live-sock.c": "fbc09282dd7758da0c77ffc6eab1cf12957f785df24e273aa780ab03e80afb3d",
+    "src/userns/live-stat.c": "1d8b08ce4c1e25e287af8cbec946e265339ed422ad44c0a00022e56573b4a6d3",
+    "src/userns/live-super.c": "cad26aec45e983d4fc66a4beb3edd4af74fb60a5c0c81a3bdd23423bdfa2a2fd",
+    "src/userns/live-syscalls.c": "90cb7a81562394b2e9958eca5e5f8752421bfe6dfb0de423ee4ed5d4897b0723",
+    "src/userns/live-sysfs.c": "847e1f10f59234a129562b6cec925ce473667f2529128e8199744774496ba0c1",
+    "src/userns/live-time.c": "560740aa1c40ffdb51836f7e1258589595ca8aee9f2f7591446aa5c6682c70f2",
+    "src/userns/live-ucounts.c": "e86030e633ab92e60f0261798965f2c3014be3d04861c80377024937e4760450",
+    "src/userns/live-unix.c": "7b4fcf95b55c002c41acd8a9b9c2c3fa0e9bf9140229b19e4ca30ac90434df88",
+    "src/userns/live-vfs.c": "109fa30d23140e3b36f00562c46a2373666163512afe22935d805bf8663ea9ff",
+    "src/userns/live.h": "1fc41524aad47b87160a46d7e59ceadb39041d5bb080f864086a94eaa5dd0bea",
+    "src/userns/main.c": "73c75f76c8ef98d7fc67bf347fbc3550b98d2e0bbd2d1fcf6ace65c67b9602a7",
+    "src/userns/mm-original.S": "3ec4fcc0931dbecb0c36242dc4e03ed6a3318bd13be8022b0caed488b53febe9",
+    "src/userns/names.h": "1e5671683eeaf8deec399e9a62eede66a716619fac481ce31c8b4b06076038ed",
+    "src/userns/nsfs-original.S": "a8ed61f785a3e60042bad8db03cfe4496b30baea26d710e76efcf9e767602820",
+    "src/userns/sock-original.S": "0d7a379cdd1b150c07e707dfb16e41ccb4115aa9fcaad1110ea9987075700259",
+    "src/userns/test.h": "d243ba86401f293efe57d474d055918e59569014c765d0984f9cf353b4447faa",
+    "src/userns/user_namespace.c": "03c9f2acf02b2fb3b3e75a6f5e403a40579e1157a55474c51abacfd34b9b9054",
+    "src/userns/utsname.c": "f8c21d4092eb90417d835656e5e0b3d6c38bec938bef5edb344bb37cfa8300fe",
+    "tests/device/userns-load": "d36b1bf8cab7367148f9710efff3b2c12eee52f87cfcd4d318f9861e2355551e",
+    "tests/device/userns-run": "eb9891d6852fdc4dc1e5120351cf0715d47d6fc18bea9020ce830909334d5bc8",
+    "tests/device/userns-tests": "693e69844ab88f0db2ffa3e7be5c15d885adf3d8755ab80de6ebd81ed75ec9bd",
+    "tests/module/test_plz110_optional_loader.py": "3317dae0ce8c97b3ecea6e2d23825af3d72eefc5b9ee3b57f56064c165a8cd97",
+    "tests/vm/Dockerfile": "122e31f6fc960427f3397c94f59ea9375fb320f09b57e29c3aaeb0b6889a546c",
+    "tests/vm/devtmpfs-fixture.c": "df4b5a8dfcc93c3cf5d40ff38e915597776127c288bf1d089b6d0d18763ef313",
+    "tests/vm/devtmpfs-init": "9c495ce4418c8b81dfd8c059f442703f54ebda300919206dcbc864646bb73944",
+    "tests/vm/devtmpfs.c": "12aede0ea6f9f02251a10c5b563c71600417c8e7fffe5b36cd990c20958e08ae",
+    "tests/vm/droidspaces-sandbox": "c15e98594255e0dd21cff4edab9f00fa18cea3e05b8c35b7e4ca6837dbe380e0",
+    "tests/vm/droidspaces-sandbox-init": "52706ad6710392164487ddb9276b48650c784ce9bde6dda5409d9129161cccbd",
+    "tests/vm/init": "172138eaa5ed667755313b09c96718b85e6a1f5353282a16ebc8110f2cc42b2a",
+    "tests/vm/ipc.c": "7537405c7da7b427ab2711d66e3f3b0cfa9e7699437b5e4bf351c45e1f6e3558",
+    "tests/vm/load-module.c": "215237ef05f65766cfec29887e08d1059573b47e80edf5735374b7f79b587c75",
+    "tests/vm/mqueue.c": "d4c8ff45ba9ceeee19cca65800f9286c903e5f83bb33dfbbfa29f6ee432e0f52",
+    "tests/vm/namespaces-6.18.c": "384ae12c8535e363f31e8637b0ca204969b19f727707e3619692903fcefde071",
+    "tests/vm/namespaces.c": "8099b6176a81d144ba3c6d6bfce081008b4012e742cdc037476b310e8d5fa432",
+    "tests/vm/pid-lifetimes.c": "9882ad02b4b5476f2f08adac84aa8ffb96effb8f2b71b84d4edf31b8c744388e",
+    "tests/vm/pid-policy.c": "92651f31f879dbba4b770aa9d34620ff84d345eb08f0a8495df8795fca62bc49",
+    "tests/vm/preexisting-ipc.c": "69e58c648cb72f0d84d5a535663e343a4c6bd2f81372358ebfc562465a48ef0c",
+    "tests/vm/prepare-6.6.sh": "77ce600aa11ec22fc24aa3512fc573dbe7d2d11dc0469e6015d19c2ae889fc00",
+    "tests/vm/prepare-droidspaces-runtime.sh": "798959a0cc8c1508bd984a520d809f7d9a621d2178806054c1baa151a3fddbff",
+    "tests/vm/prepare-sandbox-runtime.sh": "a440223cad3ac764a02c43f8d916d007e0d062e74ec25df00077d1e37fa5a4d7",
+    "tests/vm/prepare.sh": "d07d9830cbf8478ec09f649774233fd7d4b4963c72a366c888d0034022c70779",
+    "tests/vm/run-6.6.sh": "23ac58fdb4c95e196007e06f04f2015979ed1d90fccefb76d48ed72119bc6f9c",
+    "tests/vm/run-devtmpfs.sh": "b0b6f9cb87db246075ce9899c36d161ead7fbcde47569e28e3ad89a4a5d8ac50",
+    "tests/vm/run-gki.py": "b06e5e2253a36ddef50af16d2c85f1637b48c91b86fde8444ee7f01cf15fb69c",
+    "tests/vm/run-userns-core.sh": "2af80164f69e0c643783099c91a4311fa13bff84390205a736b9f746d736a8aa",
+    "tests/vm/run-userns-live.sh": "7a19e9f2b83bbca90c21bf7fc0d9a2dfb5559129013078a9356f48076f6bc4ad",
+    "tests/vm/run.sh": "03622e51c7e3fa4252f9f14a623e1eb290891a9a12934a2776b6b0f14d1637a3",
+    "tests/vm/userns-core-init": "15e39358008d1c0a4c34e1888230709c0d340bf877005324020c6425caf08574",
+    "tests/vm/userns-core.c": "3cf6ddc8a47387e27a4b99a9ebf1023b8f45e9fd2718ebc2d0e7cc12e8509ca3",
+    "tests/vm/userns-live-init": "c9abfafd51b2309b0cb3477ebd0b334562847a24e0ae98b4757b5cb5ea2d192a",
+    "tests/vm/userns-live.c": "9d4aaa95775b73adeecedad492102fee7103fafdb7ebd2759729354e55d1f228",
+    "tests/vm/userns-policy.c": "6bb902592c7a31faafe8572cb949fde5184f66d9b0f1fd2055030037f7b46e7e",
+    "tests/vm/userns-sandbox.c": "b0ce466edf9155a8fafac5048added490e2d5718e365b84fbfa4c8e6f02bab5d",
+    "vendor/kallrecon/.DS_Store": "5a29822aa0ab5d7c0108cdf61ad234d6ea0093f66390c069412d0c9aa151d3e0",
+    "vendor/kallrecon/LICENSE": "d8c320ffc0030d1b096ae4732b50d2b811cf95e9a9b7377c1127b2563e0a0388",
+    "vendor/kallrecon/ORIGIN": "6d9dfd22d835b66739198c9023f516ac41482f4c68fdd15b5ac469e445ac09c8",
+    "vendor/kallrecon/deps.mk": "b85d527d2bd1eacc70eda813ff5ec5d6c83d3096f09ee6d9e2e4b699044f5d1d",
+    "vendor/kallrecon/lib/access.c": "7cded991443efa698c333e9c56e5628898975f7ee26bbbb2a332b2e154808785",
+    "vendor/kallrecon/lib/access.h": "22d709b4bddf7b091756b439f237d8653fb883c4f9e675764918af0ea9f5ef0b",
+    "vendor/kallrecon/lib/anchor.S": "0df06a93fba82c10cf6d457478b35f0d52f9b6fdbf1baf8f9de1e7fba22ce94c",
+    "vendor/kallrecon/lib/core.c": "3fafa906938a80e34cf6636527506b9304c4eca54d80e4ca616340d10066733c",
+    "vendor/kallrecon/lib/core.h": "3939eea827c15ff8d1f00e0681ef7eb9aab3626240373cb7c588504765b56b8e",
+    "vendor/kallrecon/lib/discover.c": "c867d48fabb5e259cfcd228a4c8d717d53550a56ba976253938614e9979e4ab3",
+    "vendor/kallrecon/lib/discover.h": "554c5db4a9a37e64abebfcfb2d8f7db2d274e2f71935ce2822ca78a0b9f2f512",
+    "vendor/kallrecon/lib/fastboot.c": "051455fc5c59be89cd2c6f308bfba6477cce024b92bc2a034a861b9bf33091e5",
+    "vendor/kallrecon/lib/fastboot.h": "df4c87ee9d959f79d91b2757e4d13192f0171872f1c7f5ccea39de5f0c46da59",
+    "vendor/kallrecon/lib/hint.c": "9b6cfe6f86224c1d86e17c02f643910c2ac17d5eadd7456672bbdd395a79571d",
+    "vendor/kallrecon/lib/hint.h": "250b304a97ed384d2f4e07bf5471bb08e40460c2753dd3fb494d9ce88fa867fa",
+    "vendor/kallrecon/lib/ks_dbg.h": "5a36d511e9eed79ff66e52f96f68c68f3efda729b28038e1b278c18a1e3b973d",
+    "vendor/kallrecon/lib/slide.c": "f0362a51bb91135a25839c4b702d87a357020e282f039f372a44060c39156c08",
+    "vendor/kallrecon/lib/slide.h": "83b8fd02553dc7ff51ca6b2219f2f45ed4c515a741ffc073e03db5f70d547bd9",
+    "vendor/kallrecon/lib/symbol.c": "3449fc5e2d6f001920c4514f097cce63c6d4ff9d4d95111e9953ad3c9dced47e",
+    "vendor/kallrecon/lib/symbol.h": "a96f9e52bb98c935f8d631372f4cb71fdd6da258687e510ff045b2db4a0dd175",
+    "vendor/kallrecon/lib/variant.c": "6b96e986382db7c8e6b68661ee538caff59e6bf4edaf3d27e7411723c657c95e",
+    "vendor/kallrecon/lib/variant.h": "d95f7d7b9134558922407ac41224bb4dc66f123ee4f2f5e8bc36ec42b8482b4c"
+  },
+  "validation": {
+    "recorded_at": "2026-10-10T03:38:47.545587+00:00",
+    "device": {
+      "result": "passed",
+      "selinux": "Enforcing",
+      "launcher_domain": "u:r:ksu:s0",
+      "test_uid": 1000,
+      "policy_scenarios": 22,
+      "mapping_fd_exit_races": 32,
+      "retained_namespace_extra_rounds": 8,
+      "bubblewrap_profiles": [
+        "basic",
+        "unshare-all",
+        "disable-userns"
+      ],
+      "droidspaces_container": "all three Bubblewrap profiles passed",
+      "userns_live_after_cleanup": 0,
+      "devtmpfs_errors": 0,
+      "pid_ipc_mqueue": "passed",
+      "devtmpfs_hotplug_rounds": 8,
+      "boot_health": "passed",
+      "staged_loader": "passed twice; no duplicate insmod; cleanup zero after deferred RCU",
+      "new_zip_full_boot": "not tested; old v0.1.1 autoload restored as next-boot rollback",
+      "hma_version": "0.4.0+1c71b6c",
+      "nomount_version": "v2.1.0 (518-043b445-dev)"
+    },
+    "vm": {
+      "gki": {
+        "result": "passed",
+        "selinux": "disabled in VM",
+        "hma_preloaded": true,
+        "policy_scenarios": 22,
+        "mapping_fd_exit_races": 32,
+        "userns_live_after_exit": 0,
+        "module_sha256": "348b265f738f95f77d05fa8e10e7e8769642b57077db0a6d5cba67d386f85dc6"
+      },
+      "plz110": {
+        "result": "passed",
+        "selinux": "disabled in VM",
+        "hma_preloaded": true,
+        "policy_scenarios": 22,
+        "mapping_fd_exit_races": 32,
+        "userns_live_after_exit": 0,
+        "module_sha256": "74c62c6a072beff3e29d638005f77465a45182fe3c40034fec5a2b2d13bb805a"
+      }
+    },
+    "abi": {
+      "matching_aggregates": 790,
+      "differences": {
+        "mm_struct": {
+          "size": [
+            1216,
+            1216
+          ],
+          "changed": {},
+          "device_only": {
+            "dmabuf_info": [
+              9216,
+              64
+            ]
+          }
+        },
+        "task_struct": {
+          "size": [
+            5184,
+            5184
+          ],
+          "changed": {},
+          "device_only": {
+            "dmabuf_info": [
+              27392,
+              64
+            ],
+            "__donotuse_b448672457": [
+              27456,
+              64
+            ]
+          }
+        },
+        "files_struct": {
+          "size": [
+            704,
+            704
+          ],
+          "changed": {},
+          "device_only": {
+            "dmabuf_info": [
+              768,
+              64
+            ],
+            "__kabi_ignored1": [
+              768,
+              8
+            ]
+          }
+        }
+      },
+      "module_only": [
+        "compat_ipc64_perm",
+        "compat_ipc_perm",
+        "compat_mq_attr",
+        "compat_msgbuf",
+        "compat_msqid64_ds",
+        "compat_msqid_ds",
+        "compat_semid64_ds",
+        "compat_semid_ds",
+        "compat_shm_info",
+        "compat_shmid64_ds",
+        "compat_shmid_ds",
+        "compat_shminfo64",
+        "ds_hook",
+        "ds_ipc_task",
+        "ds_perf_ref",
+        "ds_pointer_hook",
+        "ds_syscall_hook",
+        "ext_wait_queue",
+        "idmap_key",
+        "ipc64_perm",
+        "ipc_ops",
+        "ipc_params",
+        "ipc_perm",
+        "ipc_proc_iface",
+        "ipc_proc_iter",
+        "kallrecon_hint",
+        "kallrecon_layout",
+        "mqueue_fs_context",
+        "mqueue_inode_info",
+        "msg_msgseg",
+        "msg_queue",
+        "msg_receiver",
+        "msg_sender",
+        "msgbuf",
+        "msginfo",
+        "msqid64_ds",
+        "msqid_ds",
+        "posix_msg_tree_node",
+        "scan_run",
+        "sem",
+        "sem_array",
+        "sem_queue",
+        "sem_undo",
+        "sem_undo_list",
+        "semid64_ds",
+        "semid_ds",
+        "seminfo",
+        "shm_file_data",
+        "shm_info",
+        "shmid64_ds",
+        "shmid_ds",
+        "shmid_kernel",
+        "shminfo",
+        "shminfo64",
+        "slide_win"
+      ],
+      "imports": {
+        "count": 620,
+        "missing_symbols": [],
+        "compared_function_prototypes": 538,
+        "different_function_prototypes": {},
+        "without_comparable_function_prototype": [
+          "__arch_copy_from_user",
+          "__arch_copy_to_user",
+          "__cpu_online_mask",
+          "__tracepoint_android_vh_exit_check",
+          "__tracepoint_android_vh_exit_mm",
+          "__tracepoint_android_vh_mmap_lock_free",
+          "__tracepoint_android_vh_security_audit_log_setid",
+          "__tracepoint_mmap_lock_acquire_returned",
+          "__tracepoint_mmap_lock_released",
+          "__tracepoint_mmap_lock_start_locking",
+          "__tracepoint_sched_prepare_exec",
+          "__tracepoint_sched_process_exit",
+          "__tracepoint_sched_process_fork",
+          "__tracepoint_sched_process_free",
+          "_ctype",
+          "cgroup1_fs_context_ops",
+          "cgroup2_fs_type",
+          "cgroup_bpf_enabled_key",
+          "cgroup_fs_context_ops",
+          "cgroup_threadgroup_rwsem",
+          "cgroupns_operations",
+          "cred_jar",
+          "css_set_lock",
+          "dirty_throttle_leaks",
+          "file_caps_enabled",
+          "have_favordynmods",
+          "init_mm",
+          "init_pid_ns",
+          "init_task",
+          "init_user_ns",
+          "jiffies",
+          "kimage_voffset",
+          "kmalloc_caches",
+          "mem_alloc_profiling_key",
+          "memmove",
+          "memstart_addr",
+          "mm_cachep",
+          "mnt_ns_seq",
+          "mnt_ns_tree",
+          "mnt_ns_tree_lock",
+          "mntns_operations",
+          "namespace_sem",
+          "netns_operations",
+          "noop_backing_dev_info",
+          "nop_mnt_idmap",
+          "nr_cpu_ids",
+          "nr_threads",
+          "nsproxy_cachep",
+          "overflowgid",
+          "overflowuid",
+          "page_pinner_inited",
+          "param_ops_bool",
+          "percpu_counter_batch",
+          "pid_dentry_operations",
+          "pid_max",
+          "pidfs_ino",
+          "pidmap_lock",
+          "proc_root",
+          "proc_sops",
+          "process_counts",
+          "reserved_pg_dir",
+          "root_user",
+          "sb_lock",
+          "sighand_cachep",
+          "simple_dir_operations",
+          "strchr",
+          "string_unescape",
+          "suid_dumpable",
+          "super_blocks",
+          "sysctl_overcommit_memory",
+          "sysctl_vals",
+          "sysfs_fs_context_ops",
+          "sysfs_root_kn",
+          "system_wq",
+          "tasklist_lock",
+          "timens_for_children_operations",
+          "timens_operations",
+          "ucounts_hashtable",
+          "ucounts_lock",
+          "unix_dgram_proto",
+          "uts_ns_cache",
+          "uts_sem"
+        ]
+      }
+    },
+    "external_hma": {
+      "original_sha256": "b8b9a9d5443d7b04b2f8a9b1b4555a7487dc2aeb4a5663379d94e10544e77437",
+      "gki_relabel_sha256": "918920e271b621a8b5ef75d05a9a82c6e7a798074902f255b31a056231b966ce",
+      "plz110_relabel_sha256": "1a47ad6667b4f2f137802c1c6c8ed09d2f29fad89e4867dfcb27a086bac2b5ff",
+      "redistributed": false
+    },
+    "sandbox_runtime": {
+      "version": "Debian Bubblewrap 0.8.0-2+deb12u1",
+      "sha256_manifest": "7269a9c59e84f0fc500ef72c3aaa7b5a99301d85e442d51ef74466a00fc1e64b"
+    },
+    "droidspaces_runtime": {
+      "version": "6.6.0",
+      "source_commit": "f458ff402266864a9f43e4334d4be97c521c6008",
+      "source_clean": true,
+      "source_manifest_sha256": "bc0c2c79ff0d814632db74cbdcbe645e12cd0724dda8b224316a0ad42a7aea92",
+      "binary_sha256": "bd17b114173a8cf6056dab8134d9fb62b0cdb0b97facb770b3666049a5a65159",
+      "packages_sha256": "f1afcaac2038ef52c93896f3e960117088b4c2edc073c4934766b6c132c700b5"
+    },
+    "limitations": [
+      "Not a complete CONFIG_USER_NS equivalence proof",
+      "idmapped mounts and remaining proc/VFS/LSM/key/network inline paths not fully covered",
+      "Long-term load and all Android SELinux domains not tested",
+      "No complete Docker, Podman, Flatpak or browser application test"
+    ]
+  }
+}

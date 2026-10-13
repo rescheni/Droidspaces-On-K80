@@ -1,0 +1,38 @@
+This module fixes a reference leak in the PLZ110 vendor signal observer.
+Target: oplus_sys_stability_helper.ko from the tested device's vendor_dlkm.
+Vendor ELF SHA256: 574d81868eec62ca5a83368887d4b4ad6665404586147099224980cf442c7792
+Vendor ELF build ID: 4be64d767fc521a59f11c65e5a86eda5721264ba
+Kernel: 6.12.69-android16-6-g242e1a07f878-ab15865446-4k, qcom,canoe
+
+Observed and disassembled ownership path in send_signal_catcher (size 0x21c):
++0xcc calls get_task_pid(group_leader, PIDTYPE_PID), acquiring a reference.
++0xd8 calls pid_task(), borrowing the task and discarding the PID pointer.
+The callback never releases that PID reference. Signalling a non-leader runc
+thread therefore retains its group leader's PID and the owning PID/user
+namespaces after every process has exited. QEMU without this vendor callback
+correctly reclaims the namespaces and cannot reproduce the device-only leak.
+
+The fix changes only the +0xd8 BL target to a helper which calls pid_task(),
+releases the owned PID, and returns the same borrowed task. The callback's RCU
+read-side section protects that task. Signal delivery, vendor classification,
+logging, and all other callback instructions are preserved.
+
+All 135 instructions must match the recorded fingerprint after masking only
+ELF relocation immediates. Both get_task_pid and pid_task call targets are
+validated, including the standard ARM64 module PLT. An out-of-range replacement
+branch or any mismatch is rejected before patching. The single instruction is
+written under stop_machine. The vendor module is retained and this module has
+no unload path, so the replacement text remains valid until reboot.
+
+Build: scripts/build-ddk.sh TARGET=compat OUT=/module/out/compat -j4
+Native private imports require ksud insmod. Validate target BTF before loading.
+The fix prevents new leaks; it does not force-release previously leaked PIDs.
+Reboot once to clear the old references.
+
+Regression: tests/vm/prepare-oplus-fixture.py and tests/vm/run-oplus-pidref.sh.
+The generator consumes the exact vendor ELF and emits an offline fixture with
+the same callback instruction layout. Unrelated private vendor routines become
+no-op stubs; the fixture registers no hooks. Its C driver only invokes the
+observer on a live non-leader thread. The tests prove the original leak, reject
+a one-instruction mismatch, then verify 64 corrected calls and PID/user
+namespace reclamation. The vendor ELF itself is not distributed in this repo.

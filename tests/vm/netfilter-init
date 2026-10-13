@@ -1,0 +1,26 @@
+#!/bin/sh
+export PATH=/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t tmpfs tmpfs /dev
+mknod /dev/console c 5 1
+mknod /dev/null c 1 3
+mknod /dev/zero c 1 5
+mknod /dev/random c 1 8
+mknod /dev/urandom c 1 9
+mknod /dev/fuse c 10 229
+chmod 666 /dev/null /dev/zero /dev/random /dev/urandom /dev/fuse
+echo 0 > /proc/sys/kernel/kptr_restrict
+/load-module /namespaces.ko activate=1 || poweroff -f
+sleep 1
+cat /sys/class/block/nvme0n1/dev
+IFS=: read major minor < /sys/class/block/nvme0n1/dev
+mknod /dev/root b "$major" "$minor"
+mkdir /guest
+mount -t ext4 /dev/root /guest || poweroff -f
+for d in proc sys dev; do mount --rbind /$d /guest/$d; done
+mount -t tmpfs tmpfs /guest/run
+cp /probe /guest/probe
+cp /load-module /netfilter.ko /netfilter-rules /netfilter-packets /guest/
+cp /bin/busybox /guest/busybox
+exec switch_root /guest /bin/bash /probe

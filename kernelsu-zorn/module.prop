@@ -1,0 +1,6 @@
+id=droidspaces_lkm
+name=Droidspaces LKM (zorn 6.1)
+version=v0.3.0-zorn
+versionCode=8
+author=Shikochin
+description=[待加载] Redmi K80 Pro 指定 6.1.138 内核：动态补入 PID / IPC namespace 与 POSIX mqueue；开机后检查真实功能并更新状态。

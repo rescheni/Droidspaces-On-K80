@@ -1,0 +1,49 @@
+Source: Android common kernel sources in Ylarod DDK
+Image: ghcr.io/ylarod/ddk-min@sha256:51159bc935c75a282fc65bc87e02f16bd098d1cdf55dc558c4fdd0fcf7a132e2
+Source directory: /opt/ddk/src/android15-6.6
+Build release: 6.6.127-4k-g46a034eca005-dirty
+Module adaptation base: Droidspaces LKM 2147acd (src/port, Android 16 / Linux 6.12)
+
+SHA-256 of original 6.6 input files:
+10a0a442ca517b1fa2644a20204861a94a5d34d43e2e8581a1112cd25afb2dd0  kernel/pid_namespace.c
+c885c76404daab76764a56023dacccc4b6d9918a46879bd25a7bd46b878ed91d  ipc/namespace.c
+98709aa0e2e4bdee6fe1c9ca962461380322982609355eb0d9f0d1624aa7abe6  kernel/nsproxy.c
+c94455efd69719f85a0fce40356efd9487c57f9a91d3624dd8ef57c97f5888bd  kernel/pid.c
+e325517dd81b2898b5df3cac1d611d4c41ce844bca8a42cfb9b0a0e937a8ef7f  kernel/exit.c
+cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45  fs/proc/namespaces.c
+d92de5116dd890834ef34cfed73f16ff5dda3835ea2b216879e52628dece4fd5  fs/proc/root.c
+bba97585283b85c34308e980b8a003f11b9191ff21283cb7fa255d41dee110d7  ipc/util.h
+8abddef100154371f94bbc3de47ce3cc82b117486e5a5102727daa97b3db992a  ipc/util.c
+6d60719799bbcdfe547e3979080f4c52da617367027119b8a15ddd2187bb2f65  ipc/compat.c
+c0db8edf97a11503eb6b6420019cf0e9112f8496138b9a2599917ed9e37ae208  kernel/fork.c
+016bf0ea75960081b27ed6777fb607c0250cd283f3d45fa88bcf4a68adbe2591  fs/fuse/inode.c
+e2889bf24b3ba6b2472bff98a99763470641efffd33a4c5fe338ff79743926df  kernel/cgroup/cgroup-v1.c
+d802f53c86344b33f8c897a50d877083cb1013e14ec58101f0f7e4f57b97690c  kernel/bpf/task_iter.c
+e3eca8ab0c928bed3a9ed068bec080853920a65c317e8db7eef662acba144882  ipc/msg.c
+1dd68f708a43a30afa123d71f2c25bee1dad2d70a2f94c78f9907706a68f6510  ipc/msgutil.c
+90ceb133a960be01b8c6f865a931752594df83a6c9dbee9d92853974cb1c8943  ipc/sem.c
+12546720da26b2f90f8521c4ec8f8a745451399aa55f608018e256f599b42330  ipc/shm.c
+65c9729a8f6ce2a1b9b41e2dad5b7dd0f865589b4769f02a12c5dce9ad523c17  ipc/mqueue.c
+ffde5ced4a6a3c48b50be5b77b2bb88ce2e5153ead5cbb1746fbbf0e51121ede  ipc/mq_sysctl.c
+9f44edde0c40be319c18f44994f8f94d7d7187ebf722031fa452dfb0f0dacb40  ipc/ipc_sysctl.c
+5ac535eaccf5c5914bcc5dddeeb104e1654473af5756668ecf6340f56143c94e  kernel/events/core.c
+2ac6cc43f7b33f0153b031e441de7aa126c1c89936c544226fe8706fcb01913a  kernel/reboot.c
+20b2f18f685334bd9cc02eff1c8569d91c22246be2e31d20f4fee170e9455c03  kernel/pid_sysctl.h
+6555110695715409977be61a95080c9a44107329b66c37b7bd712d95a3121f4f  mm/memfd.c
+
+Adaptations:
+- Independent port66 source set; native 6.6 implementations retain their original semantics.
+- Module-owned PID/IPC namespaces, IPC task side table, proc/sysctl/mqueue registration.
+- Selected fork/exit/PID/proc/namespace functions replace native entries in matching QEMU only.
+- IPC syscall slots, reboot and memfd policy wrappers; BPF callback pointers and FUSE/cgroup refs.
+- Perf uses the native implementation with checked prologue trampolines and owned PID refs.
+- No pidfs namespace ioctl hook: this interface is not present in the 6.6 baseline.
+- Native 6.6 FUSE initialization retained; PID reference dropped in delayed_release
+  because native fuse_conn_put is inlined into fuse_dev_free/fuse_mount_destroy.
+- 6.6 vendor exit hook declaration and mutable ctl_table handler signatures retained.
+- SHM_HUGETLB is rejected: CONFIG_SYSVIPC=n native MM uses a false inline SHM hugepage predicate.
+- PLC110 6.6.118 boot image adds a second QEMU target; see docs/plc110-6.6-vm.md.
+- proc_exit_connector is resolved dynamically because CONFIG_PROC_EVENTS differs.
+- Explicit plc110_test=1 permits device testing on the exact PLC110 6.6.118 release.
+  The manual loader verifies Android model, kernel BTF and payload checksum.
+- No automatic boot package or release promotion for this experimental build.

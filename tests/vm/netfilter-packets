@@ -1,0 +1,63 @@
+set -eux
+export PATH=/usr/sbin:/usr/bin:/sbin:/bin
+mknod /dev/full c 1 7
+mknod /dev/tty c 5 0
+chmod 666 /dev/full /dev/tty
+mkdir -p /dev/pts
+mount -t devpts devpts /dev/pts
+ln -sf /dev/pts/ptmx /dev/ptmx
+ip link set lo up
+mount -t cgroup2 cgroup2 /sys/fs/cgroup
+ip netns add ds-peer
+ip link add ds-host type veth peer name ds-peer
+ip link set ds-peer netns ds-peer
+ip addr add 192.0.2.1/24 dev ds-host
+ip link set ds-host up
+ip netns exec ds-peer ip addr add 192.0.2.2/24 dev ds-peer
+ip netns exec ds-peer ip link set ds-peer up
+ip netns exec ds-peer ip link set lo up
+cat >/tmp/server.py <<'PY'
+from http.server import BaseHTTPRequestHandler,HTTPServer
+class Handler(BaseHTTPRequestHandler):
+ def do_GET(self):
+  self.send_response(200);self.end_headers();self.wfile.write(self.client_address[0].encode())
+HTTPServer(('192.0.2.2',8081),Handler).serve_forever()
+PY
+ip netns exec ds-peer python3 /tmp/server.py >/tmp/server.log 2>&1 &
+server=$!
+echo '{"features":{"containerd-snapshotter":false}}' >/tmp/daemon.json
+for backend in legacy nft native-nft; do
+ echo "DS_BACKEND_BEGIN=$backend"
+ if [ "$backend" = legacy ]; then variant=legacy; else variant=nft; fi
+ update-alternatives --set iptables "/usr/sbin/iptables-$variant"
+ update-alternatives --set ip6tables "/usr/sbin/ip6tables-$variant"
+ extra=
+ if [ "$backend" = native-nft ]; then
+   extra=--firewall-backend=nftables
+   iptables-legacy -P FORWARD ACCEPT
+   iptables-nft -P FORWARD ACCEPT
+ fi
+ sysctl -w net.ipv4.ip_forward=1
+ dockerd --config-file=/tmp/daemon.json --data-root=/var/lib/ds-test --exec-root=/run/ds-test --pidfile=/run/ds-test.pid --host=unix:///run/docker.sock --storage-driver=overlay2 --exec-opt=native.cgroupdriver=cgroupfs $extra >"/tmp/docker-$backend.log" 2>&1 &
+ pid=$!
+ for i in $(seq 1 30); do docker info >/tmp/info 2>&1 && break; kill -0 "$pid" || break; sleep 1; done
+ if ! docker info >/dev/null; then cat "/tmp/docker-$backend.log"; exit 1; fi
+ if [ "$backend" = legacy ]; then docker load -i /opt/ds-docker-test/images.tar >/tmp/load.log; fi
+ docker network create ds-network
+ docker run -d --name ds-web --network ds-network -p 192.0.2.1:18080:8080 busybox:1.37.0 sh -c 'mkdir -p /www; echo docker-http >/www/index.html; httpd -f -p 8080 -h /www'
+ test "$(docker run --rm --network ds-network busybox:1.37.0 wget -qO- http://ds-web:8080)" = docker-http
+ test "$(ip netns exec ds-peer curl -fsS http://192.0.2.1:18080)" = docker-http
+ test "$(docker run --rm --network ds-network busybox:1.37.0 wget -qO- http://192.0.2.2:8081)" = 192.0.2.1
+ docker network create ds-other
+ webip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ds-web)
+ if docker run --rm --network ds-other busybox:1.37.0 wget -T2 -qO- "http://$webip:8080"; then echo ISOLATION_FAILED; exit 1; fi
+ docker rm -f ds-web
+ docker network rm ds-network ds-other
+ kill "$pid"; wait "$pid"
+ echo "DS_BACKEND_PACKETS_PASS=$backend"
+done
+kill "$server"; wait "$server" || true
+ip netns del ds-peer
+sleep 20
+cat /sys/module/droidspaces_ns/parameters/pid_live
+cat /sys/module/droidspaces_ns/parameters/userns_live

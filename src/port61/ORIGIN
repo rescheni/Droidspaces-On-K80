@@ -1,0 +1,38 @@
+Source: Android common kernel in pinned Ylarod DDK
+Image: ghcr.io/ylarod/ddk-min@sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3
+Source directory: /opt/ddk/src/android14-6.1
+Build release: 6.1.166-dirty
+Adaptation base: src/port66 (Android 15 / Linux 6.6)
+
+SHA-256 of original 6.1 inputs:
+49f082aa15e8821921cbbaa79703eec614357b42ed14576a458dc93c3e84068a  kernel/pid_namespace.c
+246e2085e997bee0af2eaf3cece4d71914358d6f873f76dafbc401edebbf8847  ipc/namespace.c
+b4d9ce1775454f9809731b7844c452b7b810f67fd4c3d445f053deb5cd9926e6  kernel/nsproxy.c
+cdf51fe8b1292d42650b1541b8cbba49efd61ea82509b8922ebc97a9b140eef2  kernel/pid.c
+018e4fea907c1d48653bf755dfc2cb48711a774fdfdf083a28a634a8ed0368a3  kernel/exit.c
+cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45  fs/proc/namespaces.c
+30abcf8b815dcf2c8e16d2d5c4e36d2bd55935d8f72ef83ee7d4f8f9e73f878d  fs/proc/root.c
+d0a5e46cfba3ac241637c54e56e56bdfbc92d6019d5da0380482a473ea63a366  ipc/util.h
+8abddef100154371f94bbc3de47ce3cc82b117486e5a5102727daa97b3db992a  ipc/util.c
+6d60719799bbcdfe547e3979080f4c52da617367027119b8a15ddd2187bb2f65  ipc/compat.c
+45e2271a2c2bb902b83434e4aa7e856bf610093785a86e9d1ac37ae34e2ef930  kernel/fork.c
+2522bef73a087defb994a082da25aabf77d815cdef2cb663cdca840875c3c5eb  fs/fuse/inode.c
+fee373e4fbc34a12b19f802bf5c3f8232a6cdf282f6a8daf7bd8c43279e91be5  kernel/cgroup/cgroup-v1.c
+d802f53c86344b33f8c897a50d877083cb1013e14ec58101f0f7e4f57b97690c  kernel/bpf/task_iter.c
+e3eca8ab0c928bed3a9ed068bec080853920a65c317e8db7eef662acba144882  ipc/msg.c
+1dd68f708a43a30afa123d71f2c25bee1dad2d70a2f94c78f9907706a68f6510  ipc/msgutil.c
+736c6bfd2c68f013ca9786630f6697b03fbecce248a3a19743e7e90735cbeece  ipc/sem.c
+b6336ef039ae67120cb1f2043354df04e531b282e1d20038dede6d335b270839  ipc/shm.c
+a9d0b445f6f0f53ca18082f2d0fbf7a19fa168a9f9cba581225810ed00a35227  ipc/mqueue.c
+d4d22978fe99c506e4a697100a10a7bbbb7573e26d713a4fafb27a383798e00d  ipc/mq_sysctl.c
+2d19c41afb6dc9a3894e0051f11b70bad7930239a7f95c9b5d120c0f6d35a4c1  ipc/ipc_sysctl.c
+
+Adaptations:
+- Native 6.1 PID/fork/exit/proc and SysV IPC implementations.
+- Native IPC namespaces and POSIX mqueue remain active; SysV state is added lazily.
+- Native copy_ipcs/put_ipc_ns/ipcns_put/ipcns_install entries are covered.
+- Existing namespace handles and mqueue descriptors retain their native identity.
+- SysV syscalls and proc opens initialize pre-existing namespaces before accessing ids.
+- Sysctl lookups see an empty set until a pre-existing namespace has SysV state.
+- No memfd namespace execution policy or pidfd namespace ioctl in this baseline.
+- Preserve 6.1 task_struct layout; IPC undo/shm task state remains module-owned.

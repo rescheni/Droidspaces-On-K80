@@ -1,0 +1,1340 @@
+{
+  "version": "v0.1.5",
+  "release": "6.12.69-android16-6-g242e1a07f878-ab15865446-4k",
+  "base_commit": "e2bf6a078ae649fa3bb322dd11b5b9d1b63c2a9f",
+  "source_identity": "Release tag v0.1.5 and per-file SHA256 below; no vendor ELF or raw device logs redistributed.",
+  "ddk": "ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a",
+  "build_commands": [
+    "./scripts/build-ddk.sh TARGET=namespace USERNS=1 OUT=/module/out/docker-fix/ns -j4",
+    "./scripts/build-ddk.sh TARGET=compat OUT=/module/out/docker-fix/compat -j4",
+    "./scripts/build-ddk.sh TARGET=netfilter OUT=/module/out/docker-fix/netfilter -j4",
+    "scripts/abi/prepare-device-vm.py: adapt modinfo for each target; compare-btf.py: validate each module against device BTF"
+  ],
+  "unchanged_payloads": {
+    "devtmpfs": "Exact v0.1.1 tested payload; see build/plz110-0.1.1.json at v0.1.1",
+    "health": "Exact v0.1.4 health checker; see build/plz110-0.1.4.json at v0.1.4"
+  },
+  "inputs": {
+    "namespace": {
+      "path": "out/docker-fix/ns/device/droidspaces_ns.ko",
+      "sha256": "b518f263240e5ceeacb855130375d1a0233352eda448325c62ff4fad667a0370"
+    },
+    "devtmpfs": {
+      "path": "out/userns-device-test/stage/droidspaces_devtmpfs.ko",
+      "sha256": "7146e136fc4281e31c58f04ccae31fc0ec2e1b83e9e460b5e6e98355f9a16a00"
+    },
+    "compat": {
+      "path": "out/docker-fix/compat/device/droidspaces_ns.ko",
+      "sha256": "af962fd9461c8ea4abfbb139be80a3492f98058e4845eddbbcb74542dcc45a3f"
+    },
+    "netfilter": {
+      "path": "out/docker-fix/netfilter/device/droidspaces_ns.ko",
+      "sha256": "7dc88d8fe4fcf5595945bf1bc84a37a78b41194c5f0a2ae4c56f4cc4ac1753e4"
+    },
+    "health": {
+      "path": "out/userns-device-test/userns-check",
+      "sha256": "256813465c2c82b5794ad7b15fd0fbc2d265843d177d76f1aae4015927e31e9e"
+    },
+    "gki_namespace": {
+      "path": "out/docker-fix/ns/droidspaces_ns.ko",
+      "sha256": "41963370e4ed6b92b854c6b72fa619e1ab16053dbe32acd4c8e2d07c97b21fc2"
+    },
+    "gki_compat": {
+      "path": "out/docker-fix/compat/droidspaces_compat.ko",
+      "sha256": "c9a31604bfa0227fb062b08d6058bca9bc713b4857a4c1066d69c98a4e4e874c"
+    },
+    "gki_netfilter": {
+      "path": "out/docker-fix/netfilter/droidspaces_netfilter.ko",
+      "sha256": "e5c86fe2da48fe362805fea38ddace324e04f0734e30cff8f9174d041c68e2fb"
+    },
+    "device_btf": {
+      "path": "out/device/vmlinux.btf",
+      "sha256": "1870e245673b3eaae0d1fdafb0fd7027888b638018ed9561943a51dc2539d6af"
+    },
+    "device_image": {
+      "path": "out/docker-fix/ns/device/Image",
+      "sha256": "695cd037054aa9c4bb521694cc8eba261eff3aea51de21ec29a1101ea2bf2964"
+    },
+    "gki_image": {
+      "path": "out/gki/android16-6.12/Image",
+      "sha256": "9063c74899985ad72dd66b2a523298625edff049f3641a2dfa693dbe5a58d52a"
+    },
+    "vendor_elf": {
+      "path": "out/docker-fix/research/oplus_sys_stability_helper.ko",
+      "sha256": "574d81868eec62ca5a83368887d4b4ad6665404586147099224980cf442c7792"
+    },
+    "vendor_disassembly": {
+      "path": "out/docker-fix/research/oplus-signal-catcher.txt",
+      "sha256": "335241cc1a59c1886c2159a24bdd459797476a0160f43e453b669f38198c4f97"
+    },
+    "runtime": {
+      "path": "out/userns-fuse-mount/runtime.tar.gz",
+      "sha256": "d030d437a7cb408d8a21c5e4e0985991df929de221674602c019cb1215be363e"
+    },
+    "docker_rootfs_packages": {
+      "path": "out/docker-compat/results.json",
+      "sha256": "55c7a11ec75d370cf777310d88b8826c95527071bbf9d7b69a41604a598a8816"
+    },
+    "overlay_test": {
+      "path": "out/docker-fix/userns-overlay-test",
+      "sha256": "2684f0b0d5e79254e7f85a7b43bfc016343b1a48f6a1654132cf83b0a2415d0b"
+    },
+    "phone_lifetime_runner": {
+      "path": "out/docker-fix/compat/phone-lifetime.sh",
+      "sha256": "bc46ad62edc2c1c6232a252dd61dd323addbf757296562a6058ddd8283808349"
+    },
+    "phone_packets_runner": {
+      "path": "out/docker-fix/netfilter/phone-packets.sh",
+      "sha256": "fd628db14e3d5798f744c8a25b4e3b23a6404833193fba44934f10be72960469"
+    },
+    "namespace_abi": {
+      "path": "out/docker-fix/ns/abi.json",
+      "sha256": "3d29423c5931999a55f90f82960b95799253157fec23680d3d3963cd09b054f0"
+    },
+    "namespace_btf": {
+      "path": "out/docker-fix/ns/module.btf",
+      "sha256": "50d1839755a64a68259159a3504283ba891477b9c34e134bbf23ed97630f6975"
+    },
+    "namespace_imports": {
+      "path": "out/docker-fix/ns/imports.txt",
+      "sha256": "863badda620d1cd48a0d1c1779dbe2ac030d4a9f706721f13360f496ffe37207"
+    },
+    "compat_abi": {
+      "path": "out/docker-fix/compat/abi.json",
+      "sha256": "7d28629285a537ad9873ca6868143c8ef7c0718768b7e1dc11476ce75976a4f0"
+    },
+    "compat_btf": {
+      "path": "out/docker-fix/compat/module.btf",
+      "sha256": "2e5dcdeca4c0b5a3fc9c3cda78b991cb58407be0ffa1a62c078a72766fd51830"
+    },
+    "compat_imports": {
+      "path": "out/docker-fix/compat/imports.txt",
+      "sha256": "cb653815d40222fd43339516412fcfe328ca0bce4357382abb08eb90f1c34456"
+    },
+    "netfilter_abi": {
+      "path": "out/docker-fix/netfilter/abi.json",
+      "sha256": "a15783abce73be35d180e691fd8164bc478f0ed86d33b5dea9c23fc29b66d3ce"
+    },
+    "netfilter_btf": {
+      "path": "out/docker-fix/netfilter/module.btf",
+      "sha256": "f55eaf05ee44d9c67640a61542434db583bfd77265d03b2c0a7f2aa37fbc61c1"
+    },
+    "netfilter_imports": {
+      "path": "out/docker-fix/netfilter/imports.txt",
+      "sha256": "f856e3aabfed6d07649e26b88ddb95e9d91020cd877b83673334e8b4cc64d52e"
+    },
+    "gki_namespace_console": {
+      "path": "out/docker-fix/gki-vm/console.log",
+      "sha256": "b613aa49303ef4262d796f5e0fcee783654a424436b67766100749c94eb8d48a"
+    },
+    "plz110_namespace_console": {
+      "path": "out/docker-fix/plz110-vm/console.log",
+      "sha256": "a6127ddd97404b6bc8c1e7a7e4db5da409f45b25b2cfc9a22c84f71f505d3498"
+    },
+    "gki_netfilter_console": {
+      "path": "out/docker-fix/netfilter-regression/console.log",
+      "sha256": "9be2f8955608335a3db5a4f770a9e46887f1dd2290ecde0b66f4952832b73d4d"
+    },
+    "plz110_netfilter_console": {
+      "path": "out/docker-fix/netfilter-regression-device/console.log",
+      "sha256": "af618e547cbd8ee5d88a96c40ed0d8950a07de827c3dc21d19e9577d6c2b7fd0"
+    },
+    "vendor_baseline_console": {
+      "path": "out/docker-fix/oplus-negative/console.log",
+      "sha256": "803f9cccd86f7972b8ae91b9f5e052d1e038d3d095e29ffeb90023eb0db62569"
+    },
+    "gki_compat_console": {
+      "path": "out/docker-fix/oplus-positive/console.log",
+      "sha256": "fb375d7cb1c7cba2588be84759489f10f16ca9814be334b14220a9b09563dae1"
+    },
+    "plz110_compat_console": {
+      "path": "out/docker-fix/oplus-positive-device/console.log",
+      "sha256": "8a1f4c1d89a533dba6dcf2470821a9faa543c97de0fbc3a7780ae2aec9b1b3b5"
+    },
+    "device_namespace": {
+      "path": "out/docker-fix/boot/device-regression.log",
+      "sha256": "23d3ca494e8ec166e5a654efefe93af84ad90a5eae60e9bd51938702f3b7722a"
+    },
+    "device_overlay": {
+      "path": "out/docker-fix/boot/overlay.log",
+      "sha256": "e44c6514aaaa830a3d987b73da985b84d8e0e8651aefe10ee1998dd78eae76c6"
+    },
+    "device_rules": {
+      "path": "out/docker-fix/boot/rules.log",
+      "sha256": "ef1df57e8e8e80a0feff3089358df4b4c26c5ca3411b6be0fecd6c6353c44c81"
+    },
+    "device_packets": {
+      "path": "out/docker-fix/boot/packets.log",
+      "sha256": "b8d01d337d8aa63051ebb1781f18baf06131cf9dbac12f907b844d5879f395c0"
+    },
+    "device_lifetime": {
+      "path": "out/docker-fix/boot/lifetime.log",
+      "sha256": "60c533bfa5c2dbab3e322e0152e8fe731fa268f2c12d87b4c0226184089eeae6"
+    },
+    "device_pid_ipc": {
+      "path": "out/docker-fix/boot/pid-ipc.log",
+      "sha256": "a0bfa1cb79fe3d70a0115195d0a367bcc30bc4cc034fa2a0ea2dd74b8c77352e"
+    },
+    "device_devtmpfs": {
+      "path": "out/docker-fix/boot/devtmpfs.log",
+      "sha256": "fffbaff4bcad29c21b47f5e8cf0621f0f07d074fd0d46e4c7519a005ec025708"
+    },
+    "device_loader": {
+      "path": "out/docker-fix/boot/loader.log",
+      "sha256": "9aaa0885770fcdc3c33337539aef05139a6845895206de9b2f835bf6351e97bd"
+    },
+    "device_boot": {
+      "path": "out/docker-fix/boot/capture.log",
+      "sha256": "410182c7e59017cceee510571122f02c9dab642e800fdd33eed5c8d0c10784ea"
+    },
+    "device_final": {
+      "path": "out/docker-fix/boot/final.log",
+      "sha256": "474c61ec4f03e045a538952e63c1a1e13ac0d59d5b1f45d558c9689b406ef914"
+    },
+    "device_unlock": {
+      "path": "out/docker-fix/boot/unlock-state.log",
+      "sha256": "2fb3165a825a9d2104a68ecc250dcbc033abc8d6979cadec48ecf4a6660fbe47"
+    },
+    "loader_tests": {
+      "path": "out/docker-fix/boot/loader-tests.log",
+      "sha256": "25804016476e4eb26c39ef7184a890b24be606d2047cf6ce55be6916e315bc48"
+    },
+    "boot_dmesg": {
+      "path": "out/docker-fix/boot/dmesg-live.log",
+      "sha256": "b5687a596f1de28be905e06cd1bb8a945bf2ef7e3a21d688b270c72d7e843936"
+    },
+    "boot_logcat": {
+      "path": "out/docker-fix/boot/logcat-live.log",
+      "sha256": "8090659c0466d63fc33b6d1e9ed7f5f8ea622fea9b4e6098f1fa7e1663dfcc66"
+    }
+  },
+  "sources": {
+    ".gitignore": "6b8f266ab117b500fbbbf9befea2016b950aa7c0bd7ddc21002a03f7fe12ae61",
+    "LICENSE": "d8c320ffc0030d1b096ae4732b50d2b811cf95e9a9b7377c1127b2563e0a0388",
+    "Makefile": "9a2b1621303b91f3fe0ef9bb691457ddffe41b6c6a244db72ca7a8db0f0552fe",
+    "README.md": "239f3d3a0fff1556a16bc20e99a9e54e1872f2fb78e3f6fc3bd86f0573894ba4",
+    "docs/android15-6.6.md": "0b3d61db02314b13b5487ef3d52c3828fd4fbeda2f9d6c4346674f9fcd9fd199",
+    "docs/devtmpfs-plz110.md": "58b7295ba8a508f6268a64bae157fe174c7a0e117735ab06edb12858797e5388",
+    "docs/docker-plz110-v0.1.4.md": "80aa89c35877a3dfc1ed9b7b69b1198d5835169a3a32154c97a4ef80cec3e4b2",
+    "docs/gki-builds.md": "adecd16b9782d54ad37c627e150a6f15ce598ae524dec7befd194fe70694a68c",
+    "docs/plc110-6.6-vm.md": "7b7ff90243ce48661cbfb2a8e71d98e1540735efc311eb6c064f36a9f6fddd1f",
+    "docs/plc110-device-test.md": "d42949388213b4cafb17494d37044dd942bcc36771dd6e65ede71cbf141a2912",
+    "docs/port-status.md": "dff90783623dcd68c35f2438ca06e97e7e8786eecd43011a62a976bdf4c6321b",
+    "docs/releases-v0.1.1.md": "5fb9c4976dd69ada2e77d31e917d9031a570789332787cb0247107c519038c20",
+    "docs/releases-v0.1.2.md": "dec85a0c8367f649c7b79ca3eb03775fc50a134a33df3637d82e37ca23734d2f",
+    "docs/releases-v0.1.3.md": "3ccb1969a1b95894754c62a0332ef817622b9daa5c9397d029c76dd6b312c565",
+    "docs/releases-v0.1.4.md": "9cffac270d7d0b6a9b09b3748f7b31633fe223d1525e9ca273f5f73d17a12032",
+    "docs/releases-v0.1.5.md": "4f12d877f4c2b3e58d5029ad8eae76770a71a13135d8645f47ba846b835ff5af",
+    "docs/userns-fuse.md": "ef5cb3d4bc1b5d5004a8ccc428ce8b44d6f9d90ba3b9d39d109b5dd39a002072",
+    "docs/userns-status.md": "f93b8304f779013861e69c4bee7b00c33b013153245116264a1852ac5956a379",
+    "docs/v0.1.2-boot-failure.md": "c66b21b0771af9827cada2d3c0a25908f4427a31bfa0fa8fd17c5276017de67f",
+    "kernelsu-plz110/common.sh": "7afa5e2371206717897021589c870372bfc63c25e1622325cf6ff46b1f6d5930",
+    "kernelsu-plz110/customize.sh": "fe0fb5d999911ec7806faf96165836cd63c3563ddb933cd09da6744f814c5882",
+    "kernelsu-plz110/module.prop": "c1645880d969446ca454efcb10fb0813a95a350f41afd62f0c8de6a3380c6812",
+    "kernelsu-plz110/post-fs-data.sh": "0850264b79dbc06936f64b85a94757f158c4b6fd6b695c6994342ce7840b61d2",
+    "kernelsu-plz110/service.sh": "7ec24ada186327fd4833c50f7299a695982ec4744c49d69d32ec3c9b97ee2e73",
+    "kernelsu-plz110/skip_mount": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "kernelsu/common.sh": "d1607fc6e9cd99d0d297733ad0cdaf784336c524d48b2f7de65b7cc5abdb5491",
+    "kernelsu/customize.sh": "fddcc718f70df8da5e494b460fdf1895d9b792959b29fc6224b7722265dd3258",
+    "kernelsu/module.prop": "b5a14124433929c7642dc4ae286d6c472145ee8831369a0369b78a901a47b620",
+    "kernelsu/post-fs-data.sh": "1fd1c517065c8e76de7637e1e9af5e14402706c52b0ca5a2761b73268ddcc7e6",
+    "kernelsu/service.sh": "7ec24ada186327fd4833c50f7299a695982ec4744c49d69d32ec3c9b97ee2e73",
+    "kernelsu/skip_mount": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/abi/compare-btf.py": "49335eaab975ca4f2a5bd20fd2684d8faa44ec27c38c6b81ea1b44b6942c1be2",
+    "scripts/abi/make-constraints.py": "c324da15c6f5164c38639cd4025771798f2df372ab753e4ccf2d42a50dc443a2",
+    "scripts/abi/prepare-device-vm.py": "49c6da9e9776719a3aeb2aa2e040e7c0626e3f9524e1af43babc86cd671b2e05",
+    "scripts/abi/prepare-plc110-6.6-vm.py": "e4bcdb635c9dbdfd4e75d816e467b7d7a4fbeb6a6352ce9a8d2538eccd8ca3e5",
+    "scripts/build-abi-check.py": "3d5cb8ed0f0fa0f1a7ccd407df6701b8443f9ae53f357fd6e0d028c63f7c9082",
+    "scripts/build-ddk-6.6.sh": "8d7664f7dbfc08cabcf80288a4478979f61adede327720717c8e73a2aa0240d1",
+    "scripts/build-ddk.sh": "915dc7c3db7c83969bad3b7e20f059361213b70762301720fc0fab76ffa9823e",
+    "scripts/build-gki.py": "dd4e7950e51b8d0e421877acf29c41adca5937231d085da853d56aa42602712c",
+    "scripts/build-userns-health.sh": "b0d485e16314315009915d9f2bf083946758bc058002135a71da020cd3451799",
+    "scripts/collect-device.sh": "c2f4f1330189a5a15153df5cd5251c6c86797a58a3040880f4d884f0fba037bd",
+    "scripts/load-device.sh": "4da70989022e91c8b008a88df9c1a7b6e985101964fced220ebf07e686d2efb3",
+    "scripts/load-plc110-test.sh": "d5be2a4baba61315a0c3956479d48d0560ecc8e9d81ee80ec550a81eae6458ee",
+    "scripts/package-module.py": "1af5cf06a9dd7eef997946c9e9ce5f4caebc1e91cc3c05eda4a0330aa6f78503",
+    "scripts/package-plc110-test.py": "76ac0dbe1114a4fee00b88853baaec2888012212710bc7d90964ecdd6c6a30f1",
+    "scripts/package-plz110-docker.py": "0d37798f0905f601027126ee9e50fa5ca81a577d6a27fec6b27aded27de5d787",
+    "scripts/package-plz110-optional.py": "70d7586ebb8adbaf7448915e8f6099a248cf82370d31bc57077a3d95971dec46",
+    "scripts/package-plz110-sandbox.py": "bb10ab45f25cd5816b5f5eb9c4fb4e6bbfff89120689d6ef8a3bbd950949bf0a",
+    "scripts/prepare-gki-vm.py": "de9f19a7dbfd179aff235cfd6b46370a48d56d9dac829faae0046df6e0b9d5ef",
+    "src/abi/check.c": "c7f725df063b57212ad7488e1cc8530a6aaa5945eb6da68db7b2a29f64af681d",
+    "src/compat/ORIGIN": "030c0b287dff6aa42a094ddfd5af0bb43348cfa96302a5078fe8e9c85945d788",
+    "src/compat/main.c": "59af49c1f23b5fa8a6fb011bbce310e233ac8daba0915f8dca64572e99b2d3fe",
+    "src/compat/oplus-signal-fingerprint.h": "0ddd808318885ed59788e8de145d818258bda2bfb66e11328104f4da147d01cc",
+    "src/devtmpfs/ORIGIN": "c10c88bc9b0a3fd9b333cc22f177e0047386b2b61b3fb7544a0f6d022afac004",
+    "src/devtmpfs/devtmpfs.c": "f0aabfddde1c01379d8d610bbdeb1198ac210b5ad6860d8285c4aa916023388e",
+    "src/devtmpfs/hooks.c": "36c490f2706af2170d6841fe644f0e64be340a2da3076ead83c1aede35efd554",
+    "src/devtmpfs/main.c": "94236f3bd0b49a21617962332772ebb8886a8d71a8486f8ff5bbed6a1629ed7c",
+    "src/devtmpfs/original.S": "7e6bb5835e9186f1e36b805fad19cb6b84929eac9b279fc2fb99aa15a5f6ef92",
+    "src/devtmpfs/port.h": "79a25a41a81d281b44fa1ce937e7016e218398501ba7cd49f697eb255017d7ef",
+    "src/gki-target.h": "4c1461b7553b69900593a0681f7f6e892750472d4564635ab7dea2b1cfba3940",
+    "src/health/userns.c": "0aff1beab86d5148113c4a0199221fa391452b8365d73ac52e6808ce8445f163",
+    "src/netfilter/ORIGIN": "3d2a623012528fd08fdcfedeb02cd9b8e1a89141460c51d259edc90d5bf26de9",
+    "src/netfilter/compat/net/netfilter/ds-state.h": "56e79bfdb3b1d5f5c14e2b9d3a8d9b779d355aa1fb135b5fc1d3b62e12e7ff7a",
+    "src/netfilter/compat/net/netfilter/nf_tables.h": "932a55dded216960aa5781ac3a3cadaa587c4d251a88d3221433aab6a5a99971",
+    "src/netfilter/main.c": "f8a9189048c85d88e8376725131356f7e3c8ad2c710deffb86b590a90310f0da",
+    "src/netfilter/nat-inet.c": "40302dc4e43db14d5c2de2caaa7ae4baa8b33a1289e5c3548a5b1796432fe33d",
+    "src/netfilter/objects.mk": "11d85ba4a73ff78098806a531141dfb0d0aafb7cca74d203f9333c060b917634",
+    "src/netfilter/units.h": "2ffe6ca460743e345e0e1ef591617335ea8bf1bd2e3a744ae55c202e549f4a23",
+    "src/netfilter/upstream/SOURCES.json": "d261a700d64aad3e58025f029612554866bc5aca5ac6dab3b86241c676264a96",
+    "src/netfilter/upstream/nf_tables_api.c": "83948aa742f2b40e47f5a923d705684923eff5c9ed0167a8151f6970f94e767b",
+    "src/netfilter/upstream/nf_tables_core.c": "67b23968621c278dffd479ab80395d94bd1d67fc7da454abd5443e6c967144f7",
+    "src/netfilter/upstream/nf_tables_offload.c": "0c5cb94f162d7ba9d64b8a840dadd744559c59c98a79df8bd9d538aff61dfa38",
+    "src/netfilter/upstream/nf_tables_trace.c": "30b5f24577ddd3bf373dba4285b3ccd0ed700e12a2c8b04ab96e7caa68bf98e4",
+    "src/netfilter/upstream/nft_bitwise.c": "f0ad859925e4ee987b7ff8bb802950ef03c8da79e0040be0bb776b809d71691d",
+    "src/netfilter/upstream/nft_byteorder.c": "b71c0da5639028a72f9ef75e4c409860ed47ce10b8e2ccd2cc66c386fed7787e",
+    "src/netfilter/upstream/nft_chain_filter.c": "d4b3902fab47ab982a2838bf71ec697a21a767800c86b71a8cb1184ac2d64b36",
+    "src/netfilter/upstream/nft_chain_nat.c": "871b49b6b33061ff5ca9682d0e679ba835e718b2c52988d5dfe12bee200d0720",
+    "src/netfilter/upstream/nft_chain_route.c": "01f74d2936ccbd8b9913c06b6647ce2ac11807ebd28118aaaf0aae66e32e628e",
+    "src/netfilter/upstream/nft_cmp.c": "998a79b6393e47bc4c358311a77e13aa4443e6feb73a91f5c61b5c8ab35fefc3",
+    "src/netfilter/upstream/nft_compat.c": "21eec325fb550f54f63e58ddd7121bf655c10daf6ae04466de38a8c76541b37e",
+    "src/netfilter/upstream/nft_counter.c": "a09be2a3996e45d5b4f5d59d759a4a98b25463778218c48b46160ad4791bb332",
+    "src/netfilter/upstream/nft_ct.c": "5a60cd3e918c2a0b56c6aed91c280a02e7bdb403eeca7c7b451cb9c6aa190ec0",
+    "src/netfilter/upstream/nft_dynset.c": "a8419111ef7724a99d65c2419844995b77d9c34c54dae3881a308ec4d4a515f3",
+    "src/netfilter/upstream/nft_exthdr.c": "0b1a8fc9a102361b025a10bb510da13f365a7f6cec3d457a2fbc5fd388ab6203",
+    "src/netfilter/upstream/nft_fib.c": "ef070bfc59ccc5f75f242994bfdddbabf92bafbf86be57ecbb32c6f183dee457",
+    "src/netfilter/upstream/nft_fib_inet.c": "4cb3d5657cc2797b9796bb00b548e0aac8d17f7929eec74d38a6fa8c6d0a38d5",
+    "src/netfilter/upstream/nft_fib_ipv4.c": "c54af60540b21ae2b47c10d6c148d4847500879457e593807d80dc04f88f75e2",
+    "src/netfilter/upstream/nft_fib_ipv6.c": "72e94abfcbc5889c19c1fb5f9cd5f48e7e66ee58a948db44998a59497b00a6e9",
+    "src/netfilter/upstream/nft_immediate.c": "2aa2446d1d1fb304d6fb5301fb4dda52ccc32fc70cf3390072d25e778539b05c",
+    "src/netfilter/upstream/nft_inner.c": "2630f4e4c3ff083b28613957e7403a1ff2ba596923b8f74a810bf8a903d1964e",
+    "src/netfilter/upstream/nft_last.c": "9a1e682ef32f3f4ace159cbf1353fade0fab74c1f4b9fdeb30dfef3689bf7182",
+    "src/netfilter/upstream/nft_limit.c": "9bc0cb939fba5dee5df31bc437703c67dc35990fbba806642aa0e268fab2dac5",
+    "src/netfilter/upstream/nft_log.c": "36b19d41a698acb8bd303028124f89bf40162040d2eca460c2abecb28aad9c0c",
+    "src/netfilter/upstream/nft_lookup.c": "ad42cb718df1f5d589fafa254dcb0921a3f53f6f5fab811e36a38c2788d163d5",
+    "src/netfilter/upstream/nft_masq.c": "1ac93147d2b6340426031c79531da43b575e425ab5222cd64a98dff45bfde57d",
+    "src/netfilter/upstream/nft_meta.c": "00940955a0e299ef9dd3ed8110dc3ff874958b2e92960393177319cf6ed63836",
+    "src/netfilter/upstream/nft_nat.c": "b6d33ff2810ef13d59c8e24e5d6dad8ac1566a947a24f2457385226355800cb9",
+    "src/netfilter/upstream/nft_objref.c": "2b7bfcf93933df994f3899716276dad0e74c1e7826db00dde5a4af43174a6124",
+    "src/netfilter/upstream/nft_payload.c": "29f91970230648f05d13e29d13833d717de0586456f284527465e66ffb5ea727",
+    "src/netfilter/upstream/nft_range.c": "65ce6c32b7ffe0fd53285d4910ebc1391b089b3ad39432b8794e726e235b0341",
+    "src/netfilter/upstream/nft_redir.c": "8697e451f3578be851d14ad9e62e70c1712e20de3ddea622c35955375ebfeda6",
+    "src/netfilter/upstream/nft_reject.c": "3d3ffd3a04c205fd63d5a5f247f78884e4249c9dab925a59b73e86dc30593c1b",
+    "src/netfilter/upstream/nft_reject_inet.c": "105029c1ba93346c9072f43a06d20357c4b1dcad0f2e0137eb104509809a0808",
+    "src/netfilter/upstream/nft_reject_ipv4.c": "70b81f3414e8a040da4a2a033700d7ebe570823caa405a5c1da9373a082c3d78",
+    "src/netfilter/upstream/nft_reject_ipv6.c": "ee313d9c325f2d38d01be7a3d446bbefbeddaaff5ed34d52d80d41330a5f524e",
+    "src/netfilter/upstream/nft_rt.c": "e1bd1684726d954b5ca1365006b6334c6ab26b218090acffcd1cf849a3c64bb2",
+    "src/netfilter/upstream/nft_set_bitmap.c": "cb214af25af0194be2068125304e1e3c95b9f9c9f33417f701f4c6cf087b6c9f",
+    "src/netfilter/upstream/nft_set_hash.c": "2adf25169dc63ec361ad10769bc769be3fde150bfcc1d8cd5677df4c687d5271",
+    "src/netfilter/upstream/nft_set_pipapo.c": "2a20ef42d68b92d0ddb12df1d8a7e15c3f896599a65cef320b1d4eb85ccddb4a",
+    "src/netfilter/upstream/nft_set_pipapo.h": "4ccde774110aa9f5439f10a6c9e1e2fe8fd4d0e20fc9b8c00c5c1b71b59dbafc",
+    "src/netfilter/upstream/nft_set_pipapo_avx2.h": "d66bc8d3bc4048b8df3557ff2d95e5c0f6a288526cf498a64b6ed3464faa2065",
+    "src/netfilter/upstream/nft_set_rbtree.c": "ad665b7a5fb77593ea4e75141b2b3d1d33fe93342cc6c6c1128837ec9144fa8e",
+    "src/netfilter/upstream/xt_addrtype.c": "0c4180262111003e1389bf249d0b1b039ecafbd04859d93ba230f7855068a666",
+    "src/port/ORIGIN": "f89384ee2f0ca0712bbcd21cf05912544f60fdc1e69dc4cf3b70086629d1d9f3",
+    "src/port/bpf-pidns.c": "5d6a1fbd4fb461c2a30f9b1e505168ea5e4da7c9af087f0b775be7976e9c3cc9",
+    "src/port/cgroup-pidlist.c": "754ea591b5dbace14668ed2060a8c0668339c1e243eefcdb4abc908389b6d440",
+    "src/port/exit.c": "47f7faad0c2f5c077d63e7fd66d903ef360fc38e727ae31a4b7ec50a7c55c13e",
+    "src/port/fork.c": "e9c53c3e489252a904725982d0a5228f4652edf6d03cd74dc933a79030c01ecf",
+    "src/port/fuse.c": "1e029eb2aec74161f3f7ac08ed983c79a4363873c3deb3c025fc864b964b980e",
+    "src/port/hooks.c": "148c0d05cb4c92b25d6e3242519e4942fe1001159b349e2ad292a7b76841bf28",
+    "src/port/ipc-backend.h": "9f081a5582ccf72dfa80c3e84a92a72a823066eb45c61bb8764dcac44f63dffc",
+    "src/port/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port/ipc-task.c": "a42ad78ddffa2a816d24daad71343e71fdbd22597d211481627bd64c1b304aa8",
+    "src/port/ipc-util.c": "8104642e90218cd9d58ca82eb0b316978109c1dda6222f6e424b3a3b2f8f32fa",
+    "src/port/ipc-util.h": "56cac6f8a14c85e1d0d90382b91685955233cbfb1569f3179fca33d6c0634c04",
+    "src/port/ipc.c": "19062214ef668c128f09b492a123234a8c97436741fdcd90747169158b3a61eb",
+    "src/port/ipc_sysctl.c": "a9cae93648e939b40735b343511c6d2b57febe430d6da23b5522eeb510fabb3b",
+    "src/port/main.c": "b2adc446459e13c1eb6c35c1047dbe885c7d66f0010409cda76acf025d30f39e",
+    "src/port/memfd.c": "3753baf991af77f2c1ffc544b8277edd99dc1c700978fa1afeff889a3362475f",
+    "src/port/mq_sysctl.c": "5d7f8c1f55a9f81a486ebf1ab3b20b9812708d903004540be4df4a1c17381510",
+    "src/port/mqueue.c": "c69e7c79d7e238a7da83f32b66634e40ef42d791566eb5b9263423fa7ae8add7",
+    "src/port/msg.c": "c3ac7df2508b106429dfdacb2a44d8580595be5ed8d2ffee7988fe7c120b27ea",
+    "src/port/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port/nsproxy.c": "215f483bd355ab7e904234c1dfe072b053f6e0786bb17b3b8e923c907cf424b4",
+    "src/port/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port/pid.c": "2d70035990216662a2130e32913dc18156c37677312893fee28f97b4119693ef",
+    "src/port/pid_alloc.c": "ccb5237688384c3f3ff654340b2db9fa3f88c884110da073eeeec6376d76d5ea",
+    "src/port/pidfd.c": "9746198bb07dbb5919218e31c50031e08618e60499d1e335a9650cef0149e93c",
+    "src/port/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port/proc_root.c": "687491c5434574f9de5f900dabf38c37b4f47e88aaba860902ccffad8b80e004",
+    "src/port/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port/selftest.c": "1911eb85ac9789934711e2939a4afdd2bacd2beefdf35884f9c211644ce8b9b6",
+    "src/port/sem.c": "24c68e4ad05e21d1e5005fe65fa36e3ac15c22154a7afb39a9feb51872dd0d4c",
+    "src/port/shm.c": "4b20960b5ac1b97cada1e7cb93f5261f7bc26e943f3461784a1be5acc132cd6d",
+    "src/port510/ORIGIN": "26c8be5dd5c5b3c530c7274d4c6fe815a346e22502e8cde46ea160dbfd48bc6a",
+    "src/port510/README.md": "6c4dea66ed905db86b5d16e2825447aef83b498464070c67300cd4c3c61174f1",
+    "src/port510/bpf-pidns.c": "fc8e517bdf53d4cc078fe31f1713bb69d038340870ee84b21673a585f4d964fe",
+    "src/port510/cgroup-pidlist.c": "b836bab1837211170fa73dc4eb47431930176f2c91da50fce0f5662be720c832",
+    "src/port510/exit.c": "25459acfa65a4a1af8c531539670306803960e8e96a4fc8f4eabca6fec4d47b8",
+    "src/port510/fork.c": "f4e471dde79c50a4affe00703224cd0c7165457fe85c08405e5ad0038ea8f040",
+    "src/port510/fuse.c": "fad67d81d74b08588b4e292c04b9f003dcab3994dfb7996a983b49e5d0c8cc69",
+    "src/port510/hooks.c": "1fa4a257b542bc83d64550ccd3da72305bdb984f276bd286e40453173c8f2ed2",
+    "src/port510/ipc-backend.h": "bb086f1c7bb4a2f91f55d632d495e266a74f19158ec5bf7eef290f57caf3383d",
+    "src/port510/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port510/ipc-task.c": "e5dd10ff18ab6d1ff85231e4955075182f5c1ea701547b47dcb0368ccfe4b7c9",
+    "src/port510/ipc-util.c": "29e323a91d2f48b73bdead49e12ecdbb2976e352c79c58fbd6c3c85d9a38c9aa",
+    "src/port510/ipc-util.h": "c25fe0d5c4ae7022d5057a54ba72bff697cba6d1bb43e05573df369922c382d6",
+    "src/port510/ipc.c": "92e1c95e356c9211a960e658e9684bd173bd895cc5769fa813a66f1703370521",
+    "src/port510/ipc_sysctl.c": "8e208629bebae7568eef65e29f5811731287c72382d2dd738b24b76fde0e5c56",
+    "src/port510/main.c": "387bc52adf7082a733c6aeb57f408dcb586ed0deb859df6927299cf53e586717",
+    "src/port510/memfd.c": "ff038235ad5ac21eb9a92481d5daa943d964162816fa36d1cb799e11186a8f2a",
+    "src/port510/mq_sysctl.c": "2f78426aa9c83b0e509a1513ae65fad6359cf9b3715176fea00ad6b3f6a9ef70",
+    "src/port510/mqueue.c": "2d149f4ae3764189b1aebb5559305a7cc294ac7ea2a9055c34d9cd1e62b993d8",
+    "src/port510/msg.c": "733995014c11217596b49006f12b05e0da93527b26edaa70cf1991085004b58b",
+    "src/port510/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port510/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port510/nsproxy.c": "5e71c621f244165ce9550801a2664e23df75cc2105e638a7a7961efa6f8ae98e",
+    "src/port510/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port510/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port510/pid.c": "f66e00cab1a05984b90d28e686f3ba9dd1a5cf7f62a89d91fa831715c4c0ad2c",
+    "src/port510/pid_alloc.c": "3f3acf497729324ef9af13a5406e7f731dd9cdbe5039971706090b010e2e9557",
+    "src/port510/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port510/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port510/proc_root.c": "5e13153ce98d138914b063328cb0a036cb176b9f05290c6358840523363e6e3e",
+    "src/port510/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port510/selftest.c": "85f925df1dc200f089f20d7b78ccdf7ddadb4d7ea5aeb2e1ec6f5e485559f4a3",
+    "src/port510/sem.c": "fa7d97ea8a69bf77b725ad3b34dc72ea9e267b9f83a4f28962e6690924abfe57",
+    "src/port510/shm.c": "3a8529ae5bb9a27d43088b0fbdd37fd0a72f36a4191e1bde6bdfe463707c0aa8",
+    "src/port515/ORIGIN": "804a702647ed1dfd22d4f52e780a9e3c2bf5481347ab810758ae40a02b37382a",
+    "src/port515/README.md": "f577212c2eb7cad7ed4e345fb860ddb99b19e6bd0fd3f52a424609455d494b3e",
+    "src/port515/bpf-pidns.c": "fc8e517bdf53d4cc078fe31f1713bb69d038340870ee84b21673a585f4d964fe",
+    "src/port515/cgroup-pidlist.c": "b836bab1837211170fa73dc4eb47431930176f2c91da50fce0f5662be720c832",
+    "src/port515/exit.c": "c937f0c4839863b154476ebd5751d215ff7a4c6f0640710103ea38fc74368f0f",
+    "src/port515/fork.c": "0b9e1d3d0904a40cea688bf635e489269d216716d3106c88aec23998d56eef8b",
+    "src/port515/fuse.c": "4464f8993f5f6c30684643e6db4fc66100728b47c0d2b7c1c2c6ca111b981a55",
+    "src/port515/hooks.c": "d75625d41856dc703b644e094dde1521711ed0cc6f782b098a9526e86adc4b10",
+    "src/port515/ipc-backend.h": "bb086f1c7bb4a2f91f55d632d495e266a74f19158ec5bf7eef290f57caf3383d",
+    "src/port515/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port515/ipc-task.c": "e5dd10ff18ab6d1ff85231e4955075182f5c1ea701547b47dcb0368ccfe4b7c9",
+    "src/port515/ipc-util.c": "1c67c244a32f989202a3d17e32209efea82eb9b04329b952c7beb6519fcabcd7",
+    "src/port515/ipc-util.h": "85e867d10ad8f7692cd777c0302102b65813cdbd001822009c787fd02a1bddb0",
+    "src/port515/ipc.c": "af90ee81bdac950636f3c8533b31b4f973e1d2f452aed698a76a8680a3db0ef5",
+    "src/port515/ipc_sysctl.c": "8e208629bebae7568eef65e29f5811731287c72382d2dd738b24b76fde0e5c56",
+    "src/port515/main.c": "387bc52adf7082a733c6aeb57f408dcb586ed0deb859df6927299cf53e586717",
+    "src/port515/memfd.c": "d685f51ea6147ff4887e987dd26a3d73a16737474e8f3a59d385745f5b472625",
+    "src/port515/mq_sysctl.c": "2f78426aa9c83b0e509a1513ae65fad6359cf9b3715176fea00ad6b3f6a9ef70",
+    "src/port515/mqueue.c": "0d875af8a5c6e115d97772c45b159be7ff288f72b9aa106993eb00633cbf2ae4",
+    "src/port515/msg.c": "83a671875cc5e9fb18a46199918fd5e7da46115035e9a35d4c4ce81918f33bb4",
+    "src/port515/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port515/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port515/nsproxy.c": "83c4f01b79eb2ecd759a9cefe555fd777fb86fb7d9435610a38ff114a9532e34",
+    "src/port515/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port515/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port515/pid.c": "53aeb45708446f79c07e6f9f06b2b736ed72ff89064cfd5acd5867be958389e0",
+    "src/port515/pid_alloc.c": "3f3acf497729324ef9af13a5406e7f731dd9cdbe5039971706090b010e2e9557",
+    "src/port515/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port515/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port515/proc_root.c": "5e13153ce98d138914b063328cb0a036cb176b9f05290c6358840523363e6e3e",
+    "src/port515/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port515/selftest.c": "1911eb85ac9789934711e2939a4afdd2bacd2beefdf35884f9c211644ce8b9b6",
+    "src/port515/sem.c": "9ebbb50cbc464d00e88c0cb9fd63cf38c25c7167e961b200eb7462795a54ba10",
+    "src/port515/shm.c": "4299cdb932e03c49a036a7771ef37cb1d8fa794963eaa6a5b8ce381c424ad1a7",
+    "src/port61/ORIGIN": "cb98ed0bcdb61dc497c8b4edae5c42907b48cf9f6aecc6f6f53acf6e6f3a160c",
+    "src/port61/README.md": "60fd36c43146490e71265b1e2249622451a6613935c35b098e56c0f465f0ddf6",
+    "src/port61/bpf-pidns.c": "c8529950a449ca828eafb31876f9d6b27e13bd636f150cf26f8c9b07d8becb56",
+    "src/port61/cgroup-pidlist.c": "b836bab1837211170fa73dc4eb47431930176f2c91da50fce0f5662be720c832",
+    "src/port61/exit.c": "b77e8e921afdaa24ec902b35dc6e094b105a0d145552287003459d5faf8cd6dd",
+    "src/port61/fork.c": "73f861e23aed7bfa8acec656dfea954d2ac76c53579aa51d9ee06f29e45c673c",
+    "src/port61/fuse.c": "8db73a76ac960cd58b2cf2236dc7b5937643e3725542641db084b03ebd9284d7",
+    "src/port61/hooks.c": "9333364ab86c1bbd891f59a2b711567b7de25032eb3a36404f1423a6e92c398e",
+    "src/port61/ipc-backend.h": "081278ba0a1eb24853fb818acd27f734fc5d18492af93714f88afa5cb3716ec2",
+    "src/port61/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port61/ipc-task.c": "1be8552d607b696006d32d80f1d4a882ba91b7a7ceda2be970f6b304cde0b5cb",
+    "src/port61/ipc-util.c": "895f51413ac7d9a29c18c4fabc8da7f456e807a620032d9ba7825058188a8e3a",
+    "src/port61/ipc-util.h": "5f77c30aed3398f3de6a25f9625d0cf8f25772c61efafcef89348192cd4e7a01",
+    "src/port61/ipc.c": "3562a556e4829ef2e04839054fe664a3925222243128c6e863209ca252f85707",
+    "src/port61/ipc_sysctl.c": "df3aa178618ffaadaa6de9d3a3f6d7f09f5e1d634efbe8435786032fb9b39ea4",
+    "src/port61/main.c": "527f8aa4c3e01073d1702455e0b0c965fd6422ccbb963546babe2f565f934730",
+    "src/port61/memfd.c": "5b1d09ce774330442fcb3c41f22228484920042cb0ec701fd8c35af86dff6e55",
+    "src/port61/msg.c": "c3ac7df2508b106429dfdacb2a44d8580595be5ed8d2ffee7988fe7c120b27ea",
+    "src/port61/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port61/names.h": "9c308d3f1ba809cb957168a37929a4103f1211f5c78b4ec388b3e8b4fe09ad9a",
+    "src/port61/nsproxy.c": "83c4f01b79eb2ecd759a9cefe555fd777fb86fb7d9435610a38ff114a9532e34",
+    "src/port61/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port61/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port61/pid.c": "791c80dda672f3ce5d57256a010848f63372c25fa92390d1eeee4d9b3c46b50f",
+    "src/port61/pid_alloc.c": "3f3acf497729324ef9af13a5406e7f731dd9cdbe5039971706090b010e2e9557",
+    "src/port61/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port61/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port61/proc_root.c": "13ffaac719e6c715acb9eed8310030d17a3579c96b57c6e3a518bf8db13211ad",
+    "src/port61/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port61/selftest.c": "1911eb85ac9789934711e2939a4afdd2bacd2beefdf35884f9c211644ce8b9b6",
+    "src/port61/sem.c": "e8d90e49b57b8053fad05bdbe5c8a150afa5250974fecd55dd876a08bc40dd64",
+    "src/port61/shm.c": "1e4496ec061fcc6031c77f5257278fe7eb8eddea91b170616c5f04fa05e93b6e",
+    "src/port618/ORIGIN": "9bca6135cc107e6bc30751eff4904e45754ebc933b4306d6a8d8d85ce3d14fbe",
+    "src/port618/README.md": "ba45afad8300f6f4958e84c588b712b524fd1aebc59e5b6b906c3ef5851b3859",
+    "src/port618/bpf-pidns.c": "495cb84a12410e61490e95f930657231b800aaec06149921d8a11d258c23644a",
+    "src/port618/cgroup-pidlist.c": "5f5586babea7d20059d0fa8fcf247e12295dbc957f2a8d7c660ec1c646646415",
+    "src/port618/exit.c": "55125b9adbfc1de2f09201be362b4ea6c6786ee3648f3fe59d95a0a31da391b9",
+    "src/port618/fork.c": "25f053d0c278b24e759ae8bb46cbf0a93211d35c0397796381f759f77d4e60ff",
+    "src/port618/fuse.c": "a5cdb259445d9dd41e84459e9df0a166eb5706ab990e6756ebed5d9ca381b0f7",
+    "src/port618/hooks.c": "ed343cf847e159eb15c69c1cbab61b6d1fa4fd01954c549e6e26a61b03f3c1bd",
+    "src/port618/ipc-backend.h": "9f081a5582ccf72dfa80c3e84a92a72a823066eb45c61bb8764dcac44f63dffc",
+    "src/port618/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port618/ipc-task.c": "e68c19f44d62dffe8be58c5ffb19c27734bb317f4baebc43a14a41cc9e23a94c",
+    "src/port618/ipc-util.c": "0aa8b55a7b599e2f6ac828fa3e9b9ee1ffcfef4ca7508933d48c4e6339e03290",
+    "src/port618/ipc-util.h": "56cac6f8a14c85e1d0d90382b91685955233cbfb1569f3179fca33d6c0634c04",
+    "src/port618/ipc.c": "7e8cb7d4150ebaf190f0bf45ea041137a03a51d15af6ef0715dc9354dfa419f3",
+    "src/port618/ipc_sysctl.c": "e8f10d496fb6caa8e6036b87ca603ce1b64cb284ddd311848f234a01f661c6a2",
+    "src/port618/main.c": "6ff59891cf3fd68a9508cc0c9a392a97ace640abf75630c49df4ab9c6fc8edad",
+    "src/port618/memfd.c": "cd7f769b325349ede47c5a2933ebf7580b4e6566463a847a4f32a053a42d0c25",
+    "src/port618/mq_sysctl.c": "ee004fe3aacb182245ac76054975fa00c71b7df340815064fb7e6508208eafcd",
+    "src/port618/mqueue.c": "3d67f4e115af1f38331b9d0fe47b27ce003dfd0d15ee989aedb22d4a69b138b3",
+    "src/port618/msg.c": "d381db910d373f5084aac687b1e6dbce55ac91276dc664cccd373afd39be3dfb",
+    "src/port618/msgutil.c": "c788678805fbbe82eeab02b4bba05a2b20d6ba47036da6d77bf472bd628b6a61",
+    "src/port618/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port618/nsproxy.c": "dfb5247eacd5c5e4d728fb56afe766f72867d853c2435b56f8dd16be81e943f9",
+    "src/port618/perf-original.S": "80bca1cf18816aab2aeaafaddf6df2a0d5315143d726c80dc31f35fcf28a3d60",
+    "src/port618/perf.c": "2a88da4d51231f4ef48c6e250f34645ff222f17b318dcf8e8048bf24aa4edb6f",
+    "src/port618/pid.c": "8669a566a57616f8321bd287b89be5efe1f656446c1c1b0fd71198dd2a6acc83",
+    "src/port618/pid_alloc.c": "35ce3bfd3ebbdbe13647216dcb5b1fede1e7e3a9058dde5175e7d94efac6dd4d",
+    "src/port618/pidfd.c": "d30e4f18ed1001325e7f5bca41587b864a87a308c2c2de3d30eeb3606432286b",
+    "src/port618/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port618/proc_ns.c": "72168761206b13f4cea486f842e4f968dd2d849b11b4b1b3356b7d5dbd880b83",
+    "src/port618/proc_root.c": "8b35c2c62243ef83b52808a5c99ac25fb3ad063ce4d0abe79cf8e644f8555e1b",
+    "src/port618/reboot.c": "c8f6b4d6923f48d685fdd5bace6406e65f78b84699bf9ea19d46280fe39f0c11",
+    "src/port618/selftest.c": "b9b9d88d74019e768e0cbf6c01852399d9224a2ca484fdf9628ecf012fb8ab37",
+    "src/port618/sem.c": "24c68e4ad05e21d1e5005fe65fa36e3ac15c22154a7afb39a9feb51872dd0d4c",
+    "src/port618/shm.c": "43c203fed0999312aa6e8e3bee9682cc7063e1c45aca94a63ec7869fdb73d625",
+    "src/port66/ORIGIN": "8e5e517fd21733befe2c5ddceddd32763dcfc8846fd26d9c9d797aa218d75102",
+    "src/port66/README.md": "7a9896a9c69f902504e764e2396a8882421ec0ecf6276e8e2caaddbd6ad5777d",
+    "src/port66/bpf-pidns.c": "c8529950a449ca828eafb31876f9d6b27e13bd636f150cf26f8c9b07d8becb56",
+    "src/port66/cgroup-pidlist.c": "8a3fa54184a8732403b3f10eabb4f5728dee6a1a626f4b523422dc25ab2bdee1",
+    "src/port66/exit.c": "4d225f636a75d540f19055d93599e6e3adddb42359ab8b2c07a4e3040973745b",
+    "src/port66/fork.c": "f33334eee75245b53484e3fa08713d3b1e81a47c1fb0a2c6b68497e2b93e2145",
+    "src/port66/fuse.c": "8db73a76ac960cd58b2cf2236dc7b5937643e3725542641db084b03ebd9284d7",
+    "src/port66/hooks.c": "2a0eff395969c805c0a7ca6578a59ed2a12260473a5787645ac5dd61cf49762f",
+    "src/port66/ipc-backend.h": "9f081a5582ccf72dfa80c3e84a92a72a823066eb45c61bb8764dcac44f63dffc",
+    "src/port66/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port66/ipc-task.c": "a42ad78ddffa2a816d24daad71343e71fdbd22597d211481627bd64c1b304aa8",
+    "src/port66/ipc-util.c": "8104642e90218cd9d58ca82eb0b316978109c1dda6222f6e424b3a3b2f8f32fa",
+    "src/port66/ipc-util.h": "c248f83aa331a05bf666edce32c7cbd57f0e3b9a69b5d8a4067aca7dbff48255",
+    "src/port66/ipc.c": "19062214ef668c128f09b492a123234a8c97436741fdcd90747169158b3a61eb",
+    "src/port66/ipc_sysctl.c": "386d2096b1005c8748ca8257e6610634268239a72cdd625e02b0b45b49f3b89b",
+    "src/port66/main.c": "387bc52adf7082a733c6aeb57f408dcb586ed0deb859df6927299cf53e586717",
+    "src/port66/memfd.c": "e548fd6afedc623b00c24bd3aa7e4ca078921c0960c8782a121cea149cdaf84c",
+    "src/port66/mq_sysctl.c": "d02a7b3e4eaaf3732c1e25e6c1705b89b584fa1ffb446f0d37ea6119eb1125d9",
+    "src/port66/mqueue.c": "d1c2651f56029645224c943ff23bfdbd70f3fcadd68f7eb742e0ba2ee0f61383",
+    "src/port66/msg.c": "c3ac7df2508b106429dfdacb2a44d8580595be5ed8d2ffee7988fe7c120b27ea",
+    "src/port66/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port66/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port66/nsproxy.c": "207f9933ce2314c5549bf04648f9db96d6f7aa4a0762d079f2644503d3a7de10",
+    "src/port66/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port66/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port66/pid.c": "02dc249818af96d5752fadb6ac1c3770da4081c4f687cb41b5f680b27af53194",
+    "src/port66/pid_alloc.c": "3f3acf497729324ef9af13a5406e7f731dd9cdbe5039971706090b010e2e9557",
+    "src/port66/port.h": "cfc588d1daeea78baa66dd4d9ca61128b69503339b7857961c37b24f9cf3fe7f",
+    "src/port66/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port66/proc_root.c": "00e5bd672553f815781be6a9eeb8fda7aef490da6b3b0ecb6d5ccfd211b4f8d7",
+    "src/port66/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port66/selftest.c": "1911eb85ac9789934711e2939a4afdd2bacd2beefdf35884f9c211644ce8b9b6",
+    "src/port66/sem.c": "24c68e4ad05e21d1e5005fe65fa36e3ac15c22154a7afb39a9feb51872dd0d4c",
+    "src/port66/shm.c": "22f253bf77fbcdb9c0f2e455902563756cd229c028184b03755b28fb86bdc538",
+    "src/probe.c": "4f00d0576d1a71cf0887b1b618daebb3775747dd1e32bfc69b1dc72c01570f4f",
+    "src/userns/ORIGIN": "08c824f410c2267cbb72a2821ac732803b65013e05f20614291d9e961fd48947",
+    "src/userns/compat/linux/user_namespace.h": "02c718aadd526493cf81063d49c42d77dd119257107985cf2ec243350ae34d5b",
+    "src/userns/credentials.c": "1362a3ddc0f7c0ef321914205377caa2092d3d8224362b9359d0aec45db243b3",
+    "src/userns/fuse-original.S": "6c5d029ffce07ae8442f831d64dd23e1e9734f1511fa06c5d8cbd51789a94e64",
+    "src/userns/live-capabilities.c": "45b48b88f2a3686d6e0381428e26c95d3460396c3dc5e83acf83179baf1786a5",
+    "src/userns/live-cgroup.c": "c11b6992df88a3588a248631fe14afb8eb399ce4c3d36a5add7764e2034f3731",
+    "src/userns/live-credentials.c": "e8abae2c799cde06f779d50079f0efe2e69d24928acfd50a580ababafc7fe0e4",
+    "src/userns/live-exec.c": "cb06203812f8f37c792a7f566cccee0e65a289475d3af3a22e3c13596b43a4c0",
+    "src/userns/live-fs-context.c": "30bf2db8a1b251edcc842d48ce545796fa18fd07913bef0adf76ac5e6487f859",
+    "src/userns/live-fuse-acl.c": "559267f33a777ed4414ca315d042ecb1f2a79c2259b6991a99f5937705b7962e",
+    "src/userns/live-fuse-dir.c": "ec062eb9bf15f9f92c9e34f39b4de0487ede06e67f93355456121788b5f4162d",
+    "src/userns/live-fuse-inode.c": "064145480b3d4516cfab852e3ad9c57b016538c506724504599a9cc96b5e4354",
+    "src/userns/live-fuse-request.c": "62ab11b3edcc3a9dcb680743b463c163b32732256d1a733ac0800c9649fd776b",
+    "src/userns/live-fuse.c": "3b7d4bc4196890095e1aac8f18cee4b2e816a3b1dc31ecdb04a42bd52c01dde3",
+    "src/userns/live-fuse.h": "749b09c33d30f8604e08d09c7ce0c872292f9d759fd9a6eec5f4eed4b214f3e5",
+    "src/userns/live-groups.c": "670caba5cbc53bb4b40da91508a1a6f5755c5b2072dec1cd9c8244ca84f6e95e",
+    "src/userns/live-identity.c": "ddeb636ef7741a172ca78c697b292931e7eba221d53bfd6b0071e742522723c7",
+    "src/userns/live-mm.c": "4515c7a5a3eb66840e0729230e807c4fdd8c016428659491e58f47443f8bfeb5",
+    "src/userns/live-mount.c": "a25ffbf9f3a73b8df865abaa06c884fc41ef2a663a1e5715fc81fa79721af321",
+    "src/userns/live-names.h": "6f96e6438a7a8de59ba1bcd9841559150b78f2d19eabe4179145a69ce1ea7d58",
+    "src/userns/live-netlink.c": "ad810880e3820d8039b3cc4d578db41e3e75b143a589570528220bff730959f6",
+    "src/userns/live-nsfs.c": "6bc249c1df658065affc93d17a2a9f70687a15b6d4df78dcecdbe5d2af354809",
+    "src/userns/live-proc-status.c": "66a1a07dbeaf99b79cf617d28feda98b96cc3b515dee6eb3bf843a916d9ed209",
+    "src/userns/live-proc.c": "24d9a95ce61622fe02d5ede39fa80ce230fa463f347b77ab1ade48b142a85a65",
+    "src/userns/live-scm.c": "53cce93b191f91c59039782da5cc3b710d55da45dfe155a919bcc9ef8f481aad",
+    "src/userns/live-sock.c": "fbc09282dd7758da0c77ffc6eab1cf12957f785df24e273aa780ab03e80afb3d",
+    "src/userns/live-stat.c": "1d8b08ce4c1e25e287af8cbec946e265339ed422ad44c0a00022e56573b4a6d3",
+    "src/userns/live-super.c": "cad26aec45e983d4fc66a4beb3edd4af74fb60a5c0c81a3bdd23423bdfa2a2fd",
+    "src/userns/live-syscalls.c": "90cb7a81562394b2e9958eca5e5f8752421bfe6dfb0de423ee4ed5d4897b0723",
+    "src/userns/live-sysfs.c": "847e1f10f59234a129562b6cec925ce473667f2529128e8199744774496ba0c1",
+    "src/userns/live-time.c": "560740aa1c40ffdb51836f7e1258589595ca8aee9f2f7591446aa5c6682c70f2",
+    "src/userns/live-ucounts.c": "e86030e633ab92e60f0261798965f2c3014be3d04861c80377024937e4760450",
+    "src/userns/live-unix.c": "7b4fcf95b55c002c41acd8a9b9c2c3fa0e9bf9140229b19e4ca30ac90434df88",
+    "src/userns/live-vfs.c": "109fa30d23140e3b36f00562c46a2373666163512afe22935d805bf8663ea9ff",
+    "src/userns/live.h": "d9d9b3f4658c76e8572f855b038ff9d5da892edb29825e56dae642a6cf1486f0",
+    "src/userns/main.c": "73c75f76c8ef98d7fc67bf347fbc3550b98d2e0bbd2d1fcf6ace65c67b9602a7",
+    "src/userns/mm-original.S": "3ec4fcc0931dbecb0c36242dc4e03ed6a3318bd13be8022b0caed488b53febe9",
+    "src/userns/names.h": "1e5671683eeaf8deec399e9a62eede66a716619fac481ce31c8b4b06076038ed",
+    "src/userns/nsfs-original.S": "a8ed61f785a3e60042bad8db03cfe4496b30baea26d710e76efcf9e767602820",
+    "src/userns/sock-original.S": "0d7a379cdd1b150c07e707dfb16e41ccb4115aa9fcaad1110ea9987075700259",
+    "src/userns/test.h": "d243ba86401f293efe57d474d055918e59569014c765d0984f9cf353b4447faa",
+    "src/userns/user_namespace.c": "03c9f2acf02b2fb3b3e75a6f5e403a40579e1157a55474c51abacfd34b9b9054",
+    "src/userns/utsname.c": "f8c21d4092eb90417d835656e5e0b3d6c38bec938bef5edb344bb37cfa8300fe",
+    "tests/abi/test_check.py": "651eca3f166082225cfa00fff07d0fd59f4a30ee347eb21deb22c4c12ce70b9a",
+    "tests/device/userns-load": "28620b265324d2fbbf2b77701cad010512ddd5490b04e64a54cea44ff1a37910",
+    "tests/device/userns-run": "698486c2a4c6e4b32426aad2d1611cdda91939b05af76fa1da77782b79e3b526",
+    "tests/device/userns-tests": "1ac8c20c878d94ca014c519660bc668058dbc7a391884600ed2c15bc8b72986f",
+    "tests/module/check_release.py": "1087a441b5528e40090a24314c72862140451283b8c8cafbdc8ed0f3484c914b",
+    "tests/module/test_loader.py": "6e6a510461506071283cfa86d474bdd448bfee4008f6f31c6460904fc9e774f3",
+    "tests/module/test_plc110_loader.py": "29021db7d000eb94f63c646418105b31f8eab40f6d344769d016e6bb82ca7d5a",
+    "tests/module/test_plz110_optional_loader.py": "a2e547db786d90106e04f8b465f933c635b2af34db0347a2e29b89f4e0a691ac",
+    "tests/vm/Dockerfile": "122e31f6fc960427f3397c94f59ea9375fb320f09b57e29c3aaeb0b6889a546c",
+    "tests/vm/build-oplus-fixture.sh": "21fc3d0a549b1de3bd8c757818236822076507f85e2e344c674fbb07aa1d36d4",
+    "tests/vm/devtmpfs-fixture.c": "df4b5a8dfcc93c3cf5d40ff38e915597776127c288bf1d089b6d0d18763ef313",
+    "tests/vm/devtmpfs-init": "9c495ce4418c8b81dfd8c059f442703f54ebda300919206dcbc864646bb73944",
+    "tests/vm/devtmpfs.c": "12aede0ea6f9f02251a10c5b563c71600417c8e7fffe5b36cd990c20958e08ae",
+    "tests/vm/droidspaces-sandbox": "c2ed770b7bd0ddff98695209eec6a53deaf988a2dd38cfe67bafd12ffd13d9f1",
+    "tests/vm/droidspaces-sandbox-init": "52706ad6710392164487ddb9276b48650c784ce9bde6dda5409d9129161cccbd",
+    "tests/vm/init": "172138eaa5ed667755313b09c96718b85e6a1f5353282a16ebc8110f2cc42b2a",
+    "tests/vm/ipc.c": "7537405c7da7b427ab2711d66e3f3b0cfa9e7699437b5e4bf351c45e1f6e3558",
+    "tests/vm/load-module.c": "215237ef05f65766cfec29887e08d1059573b47e80edf5735374b7f79b587c75",
+    "tests/vm/mqueue.c": "d4c8ff45ba9ceeee19cca65800f9286c903e5f83bb33dfbbfa29f6ee432e0f52",
+    "tests/vm/namespaces-6.18.c": "384ae12c8535e363f31e8637b0ca204969b19f727707e3619692903fcefde071",
+    "tests/vm/namespaces.c": "8099b6176a81d144ba3c6d6bfce081008b4012e742cdc037476b310e8d5fa432",
+    "tests/vm/netfilter-init": "29d243868ed1a0d33ba31d6643dcf37f068c4160e884d713d151c198fa6f7908",
+    "tests/vm/netfilter-packets": "1bfbf3a4990045626707205ecd3a7d05164f43649a71c5aa1c15669669110e36",
+    "tests/vm/netfilter-probe": "8d72a2d20790c6dda460b8b4ba5d8e27089ae8ead7f0e2e00a2e103261920247",
+    "tests/vm/netfilter-rules": "6c8d2039f9f1fb6078e0cda6e5fd43bf5c9c73b22de5dd00ce9ca1a26d30103d",
+    "tests/vm/oplus-pidref-fixture.c": "37f14fa1d13322ece69501384b6b827fc2781caf9a0d9200bc5ebf1d3cc685d4",
+    "tests/vm/oplus-pidref-init": "a777a9f0c537fbc49a70564c7bf178872cad0cde8441b9636f2387f76fad6f62",
+    "tests/vm/oplus-pidref.c": "5c6369293b2cf940bd2e6d9a0f8cf1ae1e4f733f1d095161b4dcca29b250844c",
+    "tests/vm/pid-lifetimes.c": "9882ad02b4b5476f2f08adac84aa8ffb96effb8f2b71b84d4edf31b8c744388e",
+    "tests/vm/pid-policy.c": "92651f31f879dbba4b770aa9d34620ff84d345eb08f0a8495df8795fca62bc49",
+    "tests/vm/preexisting-ipc.c": "69e58c648cb72f0d84d5a535663e343a4c6bd2f81372358ebfc562465a48ef0c",
+    "tests/vm/prepare-6.6.sh": "77ce600aa11ec22fc24aa3512fc573dbe7d2d11dc0469e6015d19c2ae889fc00",
+    "tests/vm/prepare-droidspaces-runtime.sh": "798959a0cc8c1508bd984a520d809f7d9a621d2178806054c1baa151a3fddbff",
+    "tests/vm/prepare-oplus-fixture.py": "7d14dce7c8b2b471a76d5d19f4849b51c1ee5c1367cc8b1f4a55f8f5a149e0c2",
+    "tests/vm/prepare-sandbox-runtime.sh": "a440223cad3ac764a02c43f8d916d007e0d062e74ec25df00077d1e37fa5a4d7",
+    "tests/vm/prepare.sh": "d07d9830cbf8478ec09f649774233fd7d4b4963c72a366c888d0034022c70779",
+    "tests/vm/run-6.6.sh": "23ac58fdb4c95e196007e06f04f2015979ed1d90fccefb76d48ed72119bc6f9c",
+    "tests/vm/run-devtmpfs.sh": "b0b6f9cb87db246075ce9899c36d161ead7fbcde47569e28e3ad89a4a5d8ac50",
+    "tests/vm/run-gki.py": "b06e5e2253a36ddef50af16d2c85f1637b48c91b86fde8444ee7f01cf15fb69c",
+    "tests/vm/run-netfilter.sh": "df27d6e15dbdfe1d8b499a8362c041ceb64423d3d09a60abe9caef9a5bd89144",
+    "tests/vm/run-oplus-pidref.sh": "54afb448b6955501dad7360076c2bdf0935d22c785f14b1809303854926a926b",
+    "tests/vm/run-userns-core.sh": "2af80164f69e0c643783099c91a4311fa13bff84390205a736b9f746d736a8aa",
+    "tests/vm/run-userns-live.sh": "9fd95add73de18cc9daa96055648d526b95a408197f19fcb617c239bc9a6386c",
+    "tests/vm/run.sh": "03622e51c7e3fa4252f9f14a623e1eb290891a9a12934a2776b6b0f14d1637a3",
+    "tests/vm/userns-core-init": "15e39358008d1c0a4c34e1888230709c0d340bf877005324020c6425caf08574",
+    "tests/vm/userns-core.c": "3cf6ddc8a47387e27a4b99a9ebf1023b8f45e9fd2718ebc2d0e7cc12e8509ca3",
+    "tests/vm/userns-fuse-io.c": "88e99d125bc6d63cf8b87fda4db3caae5c55b6a0d6c2e8cd854cb75d98943788",
+    "tests/vm/userns-fuse.c": "497435c4b985cc29f5e6185c62a18ce8b82a275b3f47f5420eabb02fb4b10af0",
+    "tests/vm/userns-live-init": "efedd90939f4162d4626df4ae9fbdf9ba46749fe92514f0b4881cfe902534942",
+    "tests/vm/userns-live.c": "9d4aaa95775b73adeecedad492102fee7103fafdb7ebd2759729354e55d1f228",
+    "tests/vm/userns-overlay.c": "32f2dde446dd0a932461ea162ff23f4da5ad7670ac0ff6f6104248a4c11eca71",
+    "tests/vm/userns-policy.c": "6bb902592c7a31faafe8572cb949fde5184f66d9b0f1fd2055030037f7b46e7e",
+    "tests/vm/userns-sandbox.c": "34b3bb44e5ffbefba9a1cfa5513b6b90bcab0dba2ca622d20701005fb60eefc0",
+    "vendor/kallrecon/LICENSE": "d8c320ffc0030d1b096ae4732b50d2b811cf95e9a9b7377c1127b2563e0a0388",
+    "vendor/kallrecon/ORIGIN": "6d9dfd22d835b66739198c9023f516ac41482f4c68fdd15b5ac469e445ac09c8",
+    "vendor/kallrecon/deps.mk": "b85d527d2bd1eacc70eda813ff5ec5d6c83d3096f09ee6d9e2e4b699044f5d1d",
+    "vendor/kallrecon/lib/access.c": "7cded991443efa698c333e9c56e5628898975f7ee26bbbb2a332b2e154808785",
+    "vendor/kallrecon/lib/access.h": "22d709b4bddf7b091756b439f237d8653fb883c4f9e675764918af0ea9f5ef0b",
+    "vendor/kallrecon/lib/anchor.S": "0df06a93fba82c10cf6d457478b35f0d52f9b6fdbf1baf8f9de1e7fba22ce94c",
+    "vendor/kallrecon/lib/core.c": "3fafa906938a80e34cf6636527506b9304c4eca54d80e4ca616340d10066733c",
+    "vendor/kallrecon/lib/core.h": "3939eea827c15ff8d1f00e0681ef7eb9aab3626240373cb7c588504765b56b8e",
+    "vendor/kallrecon/lib/discover.c": "c867d48fabb5e259cfcd228a4c8d717d53550a56ba976253938614e9979e4ab3",
+    "vendor/kallrecon/lib/discover.h": "554c5db4a9a37e64abebfcfb2d8f7db2d274e2f71935ce2822ca78a0b9f2f512",
+    "vendor/kallrecon/lib/fastboot.c": "051455fc5c59be89cd2c6f308bfba6477cce024b92bc2a034a861b9bf33091e5",
+    "vendor/kallrecon/lib/fastboot.h": "df4c87ee9d959f79d91b2757e4d13192f0171872f1c7f5ccea39de5f0c46da59",
+    "vendor/kallrecon/lib/hint.c": "9b6cfe6f86224c1d86e17c02f643910c2ac17d5eadd7456672bbdd395a79571d",
+    "vendor/kallrecon/lib/hint.h": "250b304a97ed384d2f4e07bf5471bb08e40460c2753dd3fb494d9ce88fa867fa",
+    "vendor/kallrecon/lib/ks_dbg.h": "5a36d511e9eed79ff66e52f96f68c68f3efda729b28038e1b278c18a1e3b973d",
+    "vendor/kallrecon/lib/slide.c": "f0362a51bb91135a25839c4b702d87a357020e282f039f372a44060c39156c08",
+    "vendor/kallrecon/lib/slide.h": "83b8fd02553dc7ff51ca6b2219f2f45ed4c515a741ffc073e03db5f70d547bd9",
+    "vendor/kallrecon/lib/symbol.c": "3449fc5e2d6f001920c4514f097cce63c6d4ff9d4d95111e9953ad3c9dced47e",
+    "vendor/kallrecon/lib/symbol.h": "a96f9e52bb98c935f8d631372f4cb71fdd6da258687e510ff045b2db4a0dd175",
+    "vendor/kallrecon/lib/variant.c": "6b96e986382db7c8e6b68661ee538caff59e6bf4edaf3d27e7411723c657c95e",
+    "vendor/kallrecon/lib/variant.h": "d95f7d7b9134558922407ac41224bb4dc66f123ee4f2f5e8bc36ec42b8482b4c"
+  },
+  "evidence_checks": {
+    "gki_namespace_console": {
+      "markers": [
+        "DS_USERNS_LIVE_PASS:",
+        "DS_USERNS_POLICY_PASS:",
+        "DS_USERNS_MAPPING_RACE_PASS: 32",
+        "DS_FUSE_SANDBOX_MOUNT_PASS",
+        "DS_FUSE_IO_PASS: unprivileged",
+        "DS_FUSE_IO_PASS: mapped-range",
+        "DS_FUSE_RETAINED_PASS:",
+        "DS_FUSE_ACL_PASS:",
+        "DS_FUSE_BUBBLEWRAP_PASS",
+        "DS_USERNS_DROIDSPACES_PASS:",
+        "DS_OVERLAY_PASS:",
+        "DS_USERNS_LIVE_VM_RESULT=0"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "plz110_namespace_console": {
+      "markers": [
+        "DS_USERNS_LIVE_PASS:",
+        "DS_USERNS_POLICY_PASS:",
+        "DS_USERNS_MAPPING_RACE_PASS: 32",
+        "DS_FUSE_SANDBOX_MOUNT_PASS",
+        "DS_FUSE_IO_PASS: unprivileged",
+        "DS_FUSE_IO_PASS: mapped-range",
+        "DS_FUSE_RETAINED_PASS:",
+        "DS_FUSE_ACL_PASS:",
+        "DS_FUSE_BUBBLEWRAP_PASS",
+        "DS_USERNS_DROIDSPACES_PASS:",
+        "DS_OVERLAY_PASS:",
+        "DS_USERNS_LIVE_VM_RESULT=0"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "gki_netfilter_console": {
+      "markers": [
+        "DS_NFT_RULES_PASS",
+        "DS_NETFILTER_UNLOAD_PASS",
+        "DS_NETFILTER_VM_RESULT=0",
+        "DS_BACKEND_PACKETS_PASS=legacy",
+        "DS_BACKEND_PACKETS_PASS=nft",
+        "DS_BACKEND_PACKETS_PASS=native-nft"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "plz110_netfilter_console": {
+      "markers": [
+        "DS_NFT_RULES_PASS",
+        "DS_NETFILTER_UNLOAD_PASS",
+        "DS_NETFILTER_VM_RESULT=0",
+        "DS_BACKEND_PACKETS_PASS=legacy",
+        "DS_BACKEND_PACKETS_PASS=nft",
+        "DS_BACKEND_PACKETS_PASS=native-nft"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "vendor_baseline_console": {
+      "markers": [
+        "DS_OPLUS_BASELINE_LEAK_PASS",
+        "DS_OPLUS_VM_RESULT=0"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "gki_compat_console": {
+      "markers": [
+        "DS_OPLUS_PIDREF_PASS",
+        "DS_OPLUS_VM_RESULT=0"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "plz110_compat_console": {
+      "markers": [
+        "DS_OPLUS_PIDREF_PASS",
+        "DS_OPLUS_VM_RESULT=0"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_namespace": {
+      "markers": [
+        "DS_USERNS_LIVE_PASS:",
+        "DS_USERNS_POLICY_PASS:",
+        "DS_USERNS_MAPPING_RACE_PASS: 32",
+        "DS_FUSE_SANDBOX_MOUNT_PASS",
+        "DS_FUSE_IO_PASS: unprivileged",
+        "DS_FUSE_IO_PASS: mapped-range",
+        "DS_FUSE_RETAINED_PASS:",
+        "DS_FUSE_ACL_PASS:",
+        "DS_FUSE_BUBBLEWRAP_PASS",
+        "DS_USERNS_DROIDSPACES_PASS:",
+        "DS_USERNS_DEVICE_PASS"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_overlay": {
+      "markers": [
+        "DS_OVERLAY_PASS:"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_rules": {
+      "markers": [
+        "DS_NFT_RULES_PASS"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_packets": {
+      "markers": [
+        "DS_BACKEND_PACKETS_PASS=legacy",
+        "DS_BACKEND_PACKETS_PASS=nft",
+        "DS_BACKEND_PACKETS_PASS=native-nft",
+        "DS_PHONE_PACKETS_PASS"
+      ],
+      "reject_kernel_warnings": false
+    },
+    "device_lifetime": {
+      "markers": [
+        "DS_LIFETIME_ROUND=8",
+        "DS_PHONE_LIFETIME_PASS"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_pid_ipc": {
+      "markers": [
+        "DS_NAMESPACES_PASS:",
+        "DS_SYSVIPC_PASS:",
+        "DS_MQUEUE_PASS:"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_devtmpfs": {
+      "markers": [
+        "DS_DEVTMPFS_PASS:"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_loader": {
+      "markers": [
+        "version=v0.1.5",
+        "DS_RELEASE_LOADER_PASS"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_boot": {
+      "markers": [
+        "Loaded kernel module: /data/adb/modules/droidspaces_lkm/kernel/droidspaces_netfilter.ko",
+        "DS_SANDBOX_READY"
+      ],
+      "reject_kernel_warnings": false
+    },
+    "device_final": {
+      "markers": [
+        "pid_live=0",
+        "userns_live=0",
+        "devtmpfs_errors=0",
+        "Enforcing",
+        "DS_DOCKER_DEVICE_PASS"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "device_unlock": {
+      "markers": [
+        "true",
+        "/dev/fuse /mnt/user/0/emulated fuse ",
+        "/dev/fuse /storage/emulated fuse ",
+        "Enforcing"
+      ],
+      "reject_kernel_warnings": true
+    },
+    "loader_tests": {
+      "markers": [
+        "Ran 19 tests",
+        "OK"
+      ],
+      "reject_kernel_warnings": false
+    }
+  },
+  "validation": {
+    "recorded_at": "2026-10-10T06:38:50.874636+00:00",
+    "device": {
+      "result": "passed",
+      "first_unlock": "passed",
+      "file_manager": "user confirmed normal, no restart",
+      "selinux": "Enforcing",
+      "pid_live_after_cleanup": 0,
+      "userns_live_after_cleanup": 0,
+      "devtmpfs_errors": 0,
+      "boot_id": "048b1f70-fb63-43c1-8585-dbdc5b7e24a6",
+      "modules_auto_loaded": [
+        "droidspaces_ns",
+        "droidspaces_devtmpfs",
+        "droidspaces_compat",
+        "droidspaces_netfilter"
+      ],
+      "loader_checks": 2,
+      "policy_scenarios": 22,
+      "mapping_exit_races": 32,
+      "overlay_child_rounds": 32,
+      "lifetime_expected_failures": 16,
+      "lifetime_successful_runs": 8,
+      "test_cleanup": "Docker daemons, user manager and disposable Droidspaces container stopped; namespace counts zero",
+      "boot_guard": "one-boot disable before load; normal service restored after first unlock and regressions",
+      "boot_log_review": "No OverlayFS WARN, Droidspaces/FUSE Oops or panic; existing vendor touchscreen frame_put and timekeeping suspend warnings observed"
+    },
+    "vm": {
+      "gki": "full namespace/FUSE/OverlayFS, netfilter packets/rules/unload and vendor fixture passed",
+      "plz110_original_kernel": "same passed",
+      "vendor_fixture": "negative reproduces leak; malformed instruction rejected; 64 corrected calls reclaimed"
+    },
+    "abi": {
+      "namespace": {
+        "matching_aggregates": 824,
+        "differences": {
+          "mm_struct": {
+            "size": [
+              1216,
+              1216
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                9216,
+                64
+              ]
+            }
+          },
+          "task_struct": {
+            "size": [
+              5184,
+              5184
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                27392,
+                64
+              ],
+              "__donotuse_b448672457": [
+                27456,
+                64
+              ]
+            }
+          },
+          "files_struct": {
+            "size": [
+              704,
+              704
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                768,
+                64
+              ],
+              "__kabi_ignored1": [
+                768,
+                8
+              ]
+            }
+          }
+        },
+        "module_only": [
+          "compat_ipc64_perm",
+          "compat_ipc_perm",
+          "compat_mq_attr",
+          "compat_msgbuf",
+          "compat_msqid64_ds",
+          "compat_msqid_ds",
+          "compat_semid64_ds",
+          "compat_semid_ds",
+          "compat_shm_info",
+          "compat_shmid64_ds",
+          "compat_shmid_ds",
+          "compat_shminfo64",
+          "ds_hook",
+          "ds_ipc_task",
+          "ds_perf_ref",
+          "ds_pointer_hook",
+          "ds_syscall_hook",
+          "ext_wait_queue",
+          "idmap_key",
+          "ipc64_perm",
+          "ipc_ops",
+          "ipc_params",
+          "ipc_perm",
+          "ipc_proc_iface",
+          "ipc_proc_iter",
+          "kallrecon_hint",
+          "kallrecon_layout",
+          "mqueue_fs_context",
+          "mqueue_inode_info",
+          "msg_msgseg",
+          "msg_queue",
+          "msg_receiver",
+          "msg_sender",
+          "msgbuf",
+          "msginfo",
+          "msqid64_ds",
+          "msqid_ds",
+          "posix_msg_tree_node",
+          "scan_run",
+          "sem",
+          "sem_array",
+          "sem_queue",
+          "sem_undo",
+          "sem_undo_list",
+          "semid64_ds",
+          "semid_ds",
+          "seminfo",
+          "shm_file_data",
+          "shm_info",
+          "shmid64_ds",
+          "shmid_ds",
+          "shmid_kernel",
+          "shminfo",
+          "shminfo64",
+          "slide_win"
+        ],
+        "imports": {
+          "count": 684,
+          "missing_symbols": [],
+          "compared_function_prototypes": 596,
+          "different_function_prototypes": {},
+          "without_comparable_function_prototype": [
+            "__arch_copy_from_user",
+            "__arch_copy_to_user",
+            "__cpu_online_mask",
+            "__tracepoint_android_vh_exit_check",
+            "__tracepoint_android_vh_exit_mm",
+            "__tracepoint_android_vh_mmap_lock_free",
+            "__tracepoint_android_vh_security_audit_log_setid",
+            "__tracepoint_mmap_lock_acquire_returned",
+            "__tracepoint_mmap_lock_released",
+            "__tracepoint_mmap_lock_start_locking",
+            "__tracepoint_sched_prepare_exec",
+            "__tracepoint_sched_process_exit",
+            "__tracepoint_sched_process_fork",
+            "__tracepoint_sched_process_free",
+            "_ctype",
+            "allow_sys_admin_access",
+            "bpf_stats_enabled_key",
+            "cgroup1_fs_context_ops",
+            "cgroup2_fs_type",
+            "cgroup_bpf_enabled_key",
+            "cgroup_fs_context_ops",
+            "cgroup_threadgroup_rwsem",
+            "cgroupns_operations",
+            "cred_jar",
+            "css_set_lock",
+            "dirty_throttle_leaks",
+            "file_caps_enabled",
+            "fuse_dev_fiq_ops",
+            "fuse_dev_operations",
+            "fuse_req_cachep",
+            "have_favordynmods",
+            "init_mm",
+            "init_pid_ns",
+            "init_task",
+            "init_user_ns",
+            "invalid_mnt_idmap",
+            "jiffies",
+            "kimage_voffset",
+            "kmalloc_caches",
+            "mem_alloc_profiling_key",
+            "memmove",
+            "memstart_addr",
+            "mm_cachep",
+            "mnt_ns_seq",
+            "mnt_ns_tree",
+            "mnt_ns_tree_lock",
+            "mntns_operations",
+            "namespace_sem",
+            "netns_operations",
+            "noop_backing_dev_info",
+            "nop_mnt_idmap",
+            "nr_cpu_ids",
+            "nr_threads",
+            "nsproxy_cachep",
+            "overflowgid",
+            "overflowuid",
+            "page_pinner_inited",
+            "param_ops_bool",
+            "percpu_counter_batch",
+            "pid_dentry_operations",
+            "pid_max",
+            "pidfs_ino",
+            "pidmap_lock",
+            "proc_root",
+            "proc_sops",
+            "process_counts",
+            "reserved_pg_dir",
+            "root_user",
+            "sb_lock",
+            "sighand_cachep",
+            "simple_dir_operations",
+            "strchr",
+            "string_unescape",
+            "suid_dumpable",
+            "super_blocks",
+            "sysctl_overcommit_memory",
+            "sysctl_vals",
+            "sysfs_fs_context_ops",
+            "sysfs_root_kn",
+            "system_wq",
+            "tasklist_lock",
+            "timens_for_children_operations",
+            "timens_operations",
+            "ucounts_hashtable",
+            "ucounts_lock",
+            "unix_dgram_proto",
+            "uts_ns_cache",
+            "uts_sem"
+          ]
+        }
+      },
+      "compat": {
+        "matching_aggregates": 228,
+        "differences": {
+          "mm_struct": {
+            "size": [
+              1216,
+              1216
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                9216,
+                64
+              ]
+            }
+          },
+          "task_struct": {
+            "size": [
+              5184,
+              5184
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                27392,
+                64
+              ],
+              "__donotuse_b448672457": [
+                27456,
+                64
+              ]
+            }
+          }
+        },
+        "module_only": [],
+        "imports": {
+          "count": 20,
+          "missing_symbols": [],
+          "compared_function_prototypes": 19,
+          "different_function_prototypes": {},
+          "without_comparable_function_prototype": [
+            "module_mutex"
+          ]
+        }
+      },
+      "netfilter": {
+        "matching_aggregates": 734,
+        "differences": {
+          "mm_struct": {
+            "size": [
+              1216,
+              1216
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                9216,
+                64
+              ]
+            }
+          },
+          "task_struct": {
+            "size": [
+              5184,
+              5184
+            ],
+            "changed": {},
+            "device_only": {
+              "dmabuf_info": [
+                27392,
+                64
+              ],
+              "__donotuse_b448672457": [
+                27456,
+                64
+              ]
+            }
+          }
+        },
+        "module_only": [
+          "__nft_expr",
+          "ds_nf_unit",
+          "ebt_entry",
+          "flow_cls_offload",
+          "flow_offload",
+          "flow_offload_tuple",
+          "flow_offload_tuple_rhash",
+          "genevehdr",
+          "netns_nftables",
+          "nf_flow_key",
+          "nf_flow_match",
+          "nf_flow_rule",
+          "nf_flowtable",
+          "nf_flowtable_type",
+          "nft_audit_data",
+          "nft_base_chain",
+          "nft_bitmap",
+          "nft_bitmap_elem",
+          "nft_bitwise",
+          "nft_bitwise_fast_expr",
+          "nft_byteorder",
+          "nft_chain",
+          "nft_chain_hook",
+          "nft_chain_type",
+          "nft_chain_validate_state",
+          "nft_cmp16_fast_expr",
+          "nft_cmp_expr",
+          "nft_cmp_fast_expr",
+          "nft_cmp_offload_data",
+          "nft_counter",
+          "nft_counter_percpu_priv",
+          "nft_counter_tot",
+          "nft_ct",
+          "nft_ct_expect_obj",
+          "nft_ct_helper_obj",
+          "nft_ctx",
+          "nft_data",
+          "nft_data_desc",
+          "nft_dynset",
+          "nft_entry",
+          "nft_expr",
+          "nft_expr_info",
+          "nft_expr_ops",
+          "nft_expr_type",
+          "nft_exthdr",
+          "nft_fib",
+          "nft_flow_key",
+          "nft_flow_match",
+          "nft_flow_rule",
+          "nft_flowtable",
+          "nft_flowtable_filter",
+          "nft_flowtable_hook",
+          "nft_hash",
+          "nft_hash_elem",
+          "nft_hook",
+          "nft_immediate_expr",
+          "nft_inner",
+          "nft_inner_tun_ctx",
+          "nft_jumpstack",
+          "nft_last",
+          "nft_last_priv",
+          "nft_limit",
+          "nft_limit_priv",
+          "nft_limit_priv_pkts",
+          "nft_log",
+          "nft_lookup",
+          "nft_masq",
+          "nft_meta",
+          "nft_module_request",
+          "nft_nat",
+          "nft_obj_dump_ctx",
+          "nft_object",
+          "nft_object_hash_key",
+          "nft_object_ops",
+          "nft_object_type",
+          "nft_objref_map",
+          "nft_offload_ctx",
+          "nft_offload_ethertype",
+          "nft_offload_reg",
+          "nft_payload",
+          "nft_payload_set",
+          "nft_payload_vlan_hdr",
+          "nft_pipapo",
+          "nft_pipapo_elem",
+          "nft_pipapo_field",
+          "nft_pipapo_map_bucket",
+          "nft_pipapo_match",
+          "nft_pipapo_scratch",
+          "nft_pktinfo",
+          "nft_range_expr",
+          "nft_rbtree",
+          "nft_rbtree_elem",
+          "nft_redir",
+          "nft_regs",
+          "nft_regs_track",
+          "nft_reject",
+          "nft_rhash",
+          "nft_rhash_cmp_arg",
+          "nft_rhash_ctx",
+          "nft_rhash_elem",
+          "nft_rt",
+          "nft_rule",
+          "nft_rule_blob",
+          "nft_rule_dp",
+          "nft_rule_dp_last",
+          "nft_rule_dump_ctx",
+          "nft_secmark",
+          "nft_set",
+          "nft_set_binding",
+          "nft_set_desc",
+          "nft_set_dump_args",
+          "nft_set_dump_ctx",
+          "nft_set_elem",
+          "nft_set_elem_catchall",
+          "nft_set_elem_expr",
+          "nft_set_estimate",
+          "nft_set_ext",
+          "nft_set_ext_tmpl",
+          "nft_set_ext_type",
+          "nft_set_iter",
+          "nft_set_ops",
+          "nft_set_type",
+          "nft_stats",
+          "nft_table",
+          "nft_timeout",
+          "nft_traceinfo",
+          "nft_trans",
+          "nft_trans_binding",
+          "nft_trans_chain",
+          "nft_trans_elem",
+          "nft_trans_flowtable",
+          "nft_trans_gc",
+          "nft_trans_obj",
+          "nft_trans_rule",
+          "nft_trans_set",
+          "nft_trans_table",
+          "nft_userdata",
+          "nft_verdict",
+          "nft_xt_match_priv",
+          "nftables_pernet",
+          "nftnl_skb_parms",
+          "xt_addrtype_info",
+          "xt_addrtype_info_v1"
+        ],
+        "imports": {
+          "count": 235,
+          "missing_symbols": [],
+          "compared_function_prototypes": 222,
+          "different_function_prototypes": {},
+          "without_comparable_function_prototype": [
+            "__cpu_possible_mask",
+            "__per_cpu_offset",
+            "audit_enabled",
+            "jiffies",
+            "kmalloc_caches",
+            "mem_alloc_profiling_key",
+            "memmove",
+            "overflowgid",
+            "overflowuid",
+            "strchr",
+            "sys_tz",
+            "system_power_efficient_wq",
+            "system_wq"
+          ]
+        }
+      }
+    },
+    "docker": {
+      "engine": "29.9.0",
+      "containerd": "2.4.1",
+      "runc": "1.5.2",
+      "storage": "rootful overlay2; fuse-overlayfs for reference-lifetime diagnostic",
+      "firewall_backends": [
+        "iptables-legacy",
+        "iptables-nft",
+        "native nftables"
+      ],
+      "packet_tests": [
+        "container DNS and HTTP",
+        "peer namespace published port",
+        "automatic MASQUERADE",
+        "cross-bridge isolation"
+      ],
+      "nft_rules": [
+        "IPv6 sets",
+        "atomic failed batch rollback",
+        "IPv4/IPv6 INET DNAT"
+      ],
+      "rootless": "not fixed; diagnostic failures used only for lifetime regression"
+    },
+    "limitations": [
+      "Exact PLZ110 kernel and vendor callback only",
+      "Child native OverlayFS rejected with EOPNOTSUPP; use fuse-overlayfs",
+      "Rootless seccomp/capability and cgroup controller/delegation limitations remain",
+      "No br_netfilter, nftables bridge/netdev families or Swarm validation",
+      "No full CONFIG_USER_NS equivalence or long-term load guarantee"
+    ]
+  }
+}

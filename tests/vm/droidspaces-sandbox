@@ -1,0 +1,20 @@
+#!/bin/sh
+# All state lives in the disposable VM and its dedicated test container.
+set -eu
+export DS_NO_PROXY=1
+mkdir -p /dev/pts /sys/fs/cgroup
+mount -t devpts devpts /dev/pts
+mount -t cgroup2 none /sys/fs/cgroup
+/droidspaces check
+/droidspaces --name=lkm-sandbox --rootfs=/container --allow-sandboxing start
+failed=0
+/droidspaces --name=lkm-sandbox run -- /sandbox-test || failed=1
+/droidspaces --name=lkm-sandbox run -- /sandbox-test --fuse || failed=1
+/droidspaces --name=lkm-sandbox run -- /sandbox-test --all || failed=1
+/droidspaces --name=lkm-sandbox run -- /sandbox-test --disable-userns || failed=1
+/droidspaces --name=lkm-sandbox stop || failed=1
+if [ "$failed" != 0 ]; then
+    find /var/lib/Droidspaces /data/local/Droidspaces -name log -type f -exec cat {} \; 2>/dev/null || true
+    exit 1
+fi
+echo DS_USERNS_DROIDSPACES_PASS: Bubblewrap inside Droidspaces

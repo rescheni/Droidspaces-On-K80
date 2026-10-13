@@ -1,0 +1,23 @@
+#!/bin/sh
+export PATH=/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+echo 0 > /proc/sys/kernel/kptr_restrict
+result=0
+run_tests() {
+    ! grep -qw devtmpfs /proc/filesystems || return 1
+    /load-module /namespaces.ko "$(cat /ns-params)" || return 1
+    /load-module /devtmpfs.ko || return 1
+    [ "$(cat /sys/module/droidspaces_devtmpfs/parameters/ready)" = Y ] || return 1
+    [ "$(cat /sys/module/droidspaces_devtmpfs/parameters/errors)" = 0 ] || return 1
+    /load-module /fixture.ko || return 1
+    /devtmpfs-test || return 1
+    rmmod droidspaces_devtmpfs_fixture || return 1
+    [ "$(cat /sys/module/droidspaces_devtmpfs/parameters/errors)" = 0 ] || return 1
+    unshare -ip true || return 1
+    if rmmod droidspaces_devtmpfs; then return 1; fi
+}
+run_tests || result=1
+dmesg | grep -E 'droidspaces|BUG:|WARNING:|Oops|panic'
+echo "DS_DEVTMPFS_VM_RESULT=$result"
+poweroff -f

@@ -1,0 +1,55 @@
+Source: Android common kernel sources in Ylarod DDK
+Image: ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a
+Source directory: /opt/ddk/src/android16-6.12
+Build release: 6.12.76-4k-gae4e2f4f997e-dirty
+
+SHA-256 of original input files:
+ab9b08d1e50c5a221ae9ae2f75932ba9498b20a2d22e9496f481324cc5881061  pid_namespace.c
+c885c76404daab76764a56023dacccc4b6d9918a46879bd25a7bd46b878ed91d  ipc_namespace.c
+660560ebc799c8b47b15fc6fbdf2471652bb8e80031320438571f91fcc8804cd  util.h
+57d404b6949ce8a3cc38d5c69b52e733f9185588b4bc3b58c511ba3ea43cb009  pid.c
+18b12e1cc16dbe67c73c4b9c66f9c910a1c9385ae6eef19bf6a49db118d4e880  nsproxy.c
+fb294d7496b7718acd23577d1753e865cd8296b661ce96ee482f4f2ece66a392  exit.c
+cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45  proc-namespaces.c
+6ab155206f72d8b935474a0e73ec7758fab8c16809b2f16a42a4019512bf3c66  proc-root.c
+e3eca8ab0c928bed3a9ed068bec080853920a65c317e8db7eef662acba144882  ipc/msg.c
+e3ec244aae3c7b685c7054842778d8cff9712bbab9704decfd26cec680e1ac72  ipc/msgutil.c
+90ceb133a960be01b8c6f865a931752594df83a6c9dbee9d92853974cb1c8943  ipc/sem.c
+3d7f7acf15a9d97071445a2977f327ce77c9f6007f6cb1802e290c1edc2201c5  ipc/shm.c
+8abddef100154371f94bbc3de47ce3cc82b117486e5a5102727daa97b3db992a  ipc/util.c
+7fc3b7d258cb9aefae3290d35bc4579eebb0c6e521179643bef283f5409e96dd  ipc/mqueue.c
+7112a7cf9f2240c3a096a0bfed392ba9eb8bd8d0dfa14cb0112d6cee1cc15610  ipc/mq_sysctl.c
+12ecdf573ef856e03762742f3e15441886f5b6ef2711af4513d0849bf0dda795  ipc/ipc_sysctl.c
+6d60719799bbcdfe547e3979080f4c52da617367027119b8a15ddd2187bb2f65  ipc/compat.c
+3b1374fe8a7a3a46bcbcbf41e2b1b88deb0f6f898f49ab2cc41dd8a242aad5a2  kernel/fork.c
+
+9ff6ec762c6636c64bd414c707b918a51ffd28822446e0182dbe2a3019ec33b6  fs/pidfs.c
+24a9631059d666b1cb8f8c03d0691f817eff74a2308ee6775f1cc2852c977f94  kernel/reboot.c
+1b6d43798c2a32aeaea17476b402f7a1fe124a7dc8cc4227ee3a689619d9a8ed  fs/fuse/inode.c
+ce5dac462d492d55415099c54480170db6d6d36de1ed95eb169727256dd75811  kernel/cgroup/cgroup-v1.c
+647e9f2c7b06c3c56d7cb7ce50f02192f7a2c482a9c036d9c5fe772ec8880564  kernel/bpf/task_iter.c
+b6e781a33ff27b413439fa13ff27a747ebdba68fe3fad6093124f2181156ebd3  kernel/events/core.c (reference for perf ownership wrappers)
+5c4b1cabb4221e298d7bf89f41cc15e40e64d80a00da4751329be5df02224f81  kernel/pid_sysctl.h
+28521f46168564d3528c403c7d2e77c5b2192e7db29bf0992c183e051423e972  mm/memfd.c (policy wrapper; native allocation retained)
+
+Adaptations:
+- Namespaced entry replacements; backend helpers are unexported within the module.
+- Shared native kernel state remains external.
+- Module references and RCU/workqueue drains for namespace lifetimes.
+- No duplicate boot-time sysctl registration or SLAB_PANIC allocation.
+- PID allocation and do_exit paths compiled with PID_NS helpers enabled.
+- Namespace management/setns/procfs use the transplanted operations.
+- SysV msg/sem/shm, POSIX mqueue, IPC sysctl and procfs backends transplanted.
+- Host CONFIG_SYSVIPC stays disabled: SEM_UNDO and shm creator lists use a task side table.
+- kernel_clone prepares shared undo state before native copy_process, installs before wakeup.
+- Native ARM64 IPC syscall table slots replaced under stop_machine; compat table untouched.
+- Message allocation uses kmalloc/kfree instead of persistent boot-time kmem_buckets.
+- Explicit backend init/exit replaces boot initcalls; pre-activation user mqueue mounts rejected.
+- Namespace construction failures clear/unmount mqueue mounts before freeing state.
+- Target gate accepts the recorded canoe device/kernel and the two tested QEMU kernels.
+- FUSE connection, cgroup-v1 pidlist, BPF iterator and pidfd namespace references restored.
+- Perf retains native implementation through validated relocatable prologues; a side table owns child namespace references.
+- Container reboot is routed to reboot_pid_ns; initial namespace keeps the native reboot handler.
+- memfd namespace sysctl/policy restored; native file allocation and seals retained.
+- Read-only entry preflight validates symbols, syscall/BPF pointer targets and their KCFI hashes before hooks.
+- Activation pins the module until reboot; no automatic boot loader is installed.

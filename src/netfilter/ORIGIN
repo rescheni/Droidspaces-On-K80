@@ -1,0 +1,30 @@
+Source: Android common android16-6.12 in the pinned DDK
+Image: ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a
+Source directory: /opt/ddk/src/android16-6.12
+Original source hashes: upstream/SOURCES.json (before local adaptations)
+
+The upstream files retain their original license notices. The local changes are:
+- Store netns_nftables in registered net_generic storage. CONFIG_NF_TABLES
+  remains disabled so the native struct net layout is not changed.
+- Restore the private nf_tables header helpers omitted by that configuration.
+- Combine extension registration into one module with reverse-order rollback
+  and teardown. Cleanup functions are retained for initialization failures.
+- Supply the omitted INET NAT registration wrapper using native IPv4/IPv6
+  NAT hooks and private hook arrays (nat-inet.c).
+
+Build: scripts/build-ddk.sh TARGET=netfilter OUT=/module/out/netfilter -j4
+This produces droidspaces_netfilter.ko. Native imports require ksud insmod;
+ordinary insmod cannot resolve the private, unexported kernel symbols.
+The release/device guard is limited to the verified PLZ110 kernel and QEMU GKI.
+ABI checks against the target BTF remain mandatory before device installation.
+
+Supported families: IPv4, IPv6, INET. Includes xt_addrtype, nftables core,
+sets, conntrack, NAT/masquerade/redirect, FIB, reject, logging, limit and xtables
+compatibility. Does not implement bridge/netdev nftables or br_netfilter.
+No new firewall rules are installed by module initialization. Rule programming
+and module references remain managed by the native netfilter infrastructure.
+
+Regression entry point: tests/vm/run-netfilter.sh
+The Debian ARM64 fixture must contain Docker, iproute2, iptables-legacy,
+iptables-nft, nftables, curl, Python 3, and the offline busybox:1.37.0 image
+archive at /opt/ds-docker-test/images.tar. QEMU uses a disposable disk snapshot.

@@ -1,0 +1,75 @@
+{
+  "release": "6.12.69-android16-6-g242e1a07f878-ab15865446-4k",
+  "namespace_source": "2147acd (unchanged published v0.1.0 binary)",
+  "devtmpfs_build": "./scripts/build-ddk.sh TARGET=devtmpfs TEST_DEVTMPFS=1 OUT=/module/out/devtmpfs -j2; prepare-device-vm.py modinfo adaptation",
+  "rebuild": "Clean object rebuild reproduced the device-tested devtmpfs SHA256 exactly.",
+  "inputs": {
+    "namespace": {
+      "path": "out/release/droidspaces_ns-6.12.69-canoe.ko",
+      "sha256": "33ed20ce38f092d98f4379701d45127522370d13f3d59ba6458916a0b6f592f4"
+    },
+    "devtmpfs": {
+      "path": "out/devtmpfs/candidate/droidspaces_devtmpfs-6.12.69-plz110-test.ko",
+      "sha256": "7146e136fc4281e31c58f04ccae31fc0ec2e1b83e9e460b5e6e98355f9a16a00"
+    },
+    "device_btf": {
+      "path": "out/device/vmlinux.btf",
+      "sha256": "1870e245673b3eaae0d1fdafb0fd7027888b638018ed9561943a51dc2539d6af"
+    },
+    "device_image": {
+      "path": "out/devtmpfs/device-vm/Image",
+      "sha256": "695cd037054aa9c4bb521694cc8eba261eff3aea51de21ec29a1101ea2bf2964"
+    },
+    "gki_console": {
+      "path": "out/devtmpfs/vm/console.log",
+      "sha256": "75b6d8b74959e01d9165f6c290015df49ec73b6225bf7743ee4eebded03049cd"
+    },
+    "plz110_console": {
+      "path": "out/devtmpfs/device-vm/console.log",
+      "sha256": "8cdd076b85fb080628a5afeb2f165c71468841705726fa08444564ea96e2bc7d"
+    },
+    "device_console": {
+      "path": "out/devtmpfs/device-fixed.log",
+      "sha256": "8ef3b9580dfbd77a1f5aa0bb3f910ce0dd929e76445788b6b252d831d81fce54"
+    },
+    "validation": {
+      "path": "out/devtmpfs/candidate/validation.json",
+      "sha256": "3ef130eed1872beba1f0eb67d2d07c640abe15086d2c4f9f3ebbfa32d712d99f"
+    }
+  },
+  "sources": {
+    "Makefile": "2d66eceb8024c22dda7582d0fa6964bf6760af00d9564cd066e7586535c96898",
+    "scripts/build-ddk.sh": "915dc7c3db7c83969bad3b7e20f059361213b70762301720fc0fab76ffa9823e",
+    "src/devtmpfs/ORIGIN": "c10c88bc9b0a3fd9b333cc22f177e0047386b2b61b3fb7544a0f6d022afac004",
+    "src/devtmpfs/devtmpfs.c": "f0aabfddde1c01379d8d610bbdeb1198ac210b5ad6860d8285c4aa916023388e",
+    "src/devtmpfs/hooks.c": "36c490f2706af2170d6841fe644f0e64be340a2da3076ead83c1aede35efd554",
+    "src/devtmpfs/main.c": "94236f3bd0b49a21617962332772ebb8886a8d71a8486f8ff5bbed6a1629ed7c",
+    "src/devtmpfs/original.S": "7e6bb5835e9186f1e36b805fad19cb6b84929eac9b279fc2fb99aa15a5f6ef92",
+    "src/devtmpfs/port.h": "79a25a41a81d281b44fa1ce937e7016e218398501ba7cd49f697eb255017d7ef",
+    "tests/vm/devtmpfs-fixture.c": "df4b5a8dfcc93c3cf5d40ff38e915597776127c288bf1d089b6d0d18763ef313",
+    "tests/vm/devtmpfs-init": "9c495ce4418c8b81dfd8c059f442703f54ebda300919206dcbc864646bb73944",
+    "tests/vm/devtmpfs.c": "12aede0ea6f9f02251a10c5b563c71600417c8e7fffe5b36cd990c20958e08ae",
+    "tests/vm/run-devtmpfs.sh": "b0b6f9cb87db246075ce9899c36d161ead7fbcde47569e28e3ad89a4a5d8ac50",
+    "vendor/kallrecon/LICENSE": "d8c320ffc0030d1b096ae4732b50d2b811cf95e9a9b7377c1127b2563e0a0388",
+    "vendor/kallrecon/ORIGIN": "6d9dfd22d835b66739198c9023f516ac41482f4c68fdd15b5ac469e445ac09c8",
+    "vendor/kallrecon/deps.mk": "b85d527d2bd1eacc70eda813ff5ec5d6c83d3096f09ee6d9e2e4b699044f5d1d",
+    "vendor/kallrecon/lib/access.c": "7cded991443efa698c333e9c56e5628898975f7ee26bbbb2a332b2e154808785",
+    "vendor/kallrecon/lib/access.h": "22d709b4bddf7b091756b439f237d8653fb883c4f9e675764918af0ea9f5ef0b",
+    "vendor/kallrecon/lib/anchor.S": "0df06a93fba82c10cf6d457478b35f0d52f9b6fdbf1baf8f9de1e7fba22ce94c",
+    "vendor/kallrecon/lib/core.c": "3fafa906938a80e34cf6636527506b9304c4eca54d80e4ca616340d10066733c",
+    "vendor/kallrecon/lib/core.h": "3939eea827c15ff8d1f00e0681ef7eb9aab3626240373cb7c588504765b56b8e",
+    "vendor/kallrecon/lib/discover.c": "c867d48fabb5e259cfcd228a4c8d717d53550a56ba976253938614e9979e4ab3",
+    "vendor/kallrecon/lib/discover.h": "554c5db4a9a37e64abebfcfb2d8f7db2d274e2f71935ce2822ca78a0b9f2f512",
+    "vendor/kallrecon/lib/fastboot.c": "051455fc5c59be89cd2c6f308bfba6477cce024b92bc2a034a861b9bf33091e5",
+    "vendor/kallrecon/lib/fastboot.h": "df4c87ee9d959f79d91b2757e4d13192f0171872f1c7f5ccea39de5f0c46da59",
+    "vendor/kallrecon/lib/hint.c": "9b6cfe6f86224c1d86e17c02f643910c2ac17d5eadd7456672bbdd395a79571d",
+    "vendor/kallrecon/lib/hint.h": "250b304a97ed384d2f4e07bf5471bb08e40460c2753dd3fb494d9ce88fa867fa",
+    "vendor/kallrecon/lib/ks_dbg.h": "5a36d511e9eed79ff66e52f96f68c68f3efda729b28038e1b278c18a1e3b973d",
+    "vendor/kallrecon/lib/slide.c": "f0362a51bb91135a25839c4b702d87a357020e282f039f372a44060c39156c08",
+    "vendor/kallrecon/lib/slide.h": "83b8fd02553dc7ff51ca6b2219f2f45ed4c515a741ffc073e03db5f70d547bd9",
+    "vendor/kallrecon/lib/symbol.c": "3449fc5e2d6f001920c4514f097cce63c6d4ff9d4d95111e9953ad3c9dced47e",
+    "vendor/kallrecon/lib/symbol.h": "a96f9e52bb98c935f8d631372f4cb71fdd6da258687e510ff045b2db4a0dd175",
+    "vendor/kallrecon/lib/variant.c": "6b96e986382db7c8e6b68661ee538caff59e6bf4edaf3d27e7411723c657c95e",
+    "vendor/kallrecon/lib/variant.h": "d95f7d7b9134558922407ac41224bb4dc66f123ee4f2f5e8bc36ec42b8482b4c"
+  }
+}

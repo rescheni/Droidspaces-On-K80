@@ -1,0 +1,38 @@
+{
+  "6.18": {
+    "kmi": "android17-6.18",
+    "image": "ghcr.io/ylarod/ddk-min@sha256:fb8b66200bf402cf65a751060fc1aa29524b9fa8840feef16c7b196a4f3f0e6e",
+    "source": "src/port618",
+    "ddk_tag": "android17-6.18-20260828"
+  },
+  "6.1": {
+    "kmi": "android14-6.1",
+    "image": "ghcr.io/ylarod/ddk-min@sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3",
+    "source": "src/port61",
+    "ddk_tag": "android14-6.1-20260313"
+  },
+  "5.15": {
+    "kmi": "android13-5.15",
+    "image": "ghcr.io/ylarod/ddk-min@sha256:9e68cd9fcab748584755d31ba88ef134efc938dbde17f258c2652315f6cd81cd",
+    "source": "src/port515",
+    "ddk_tag": "android13-5.15-20260313"
+  },
+  "5.10": {
+    "kmi": "android12-5.10",
+    "image": "ghcr.io/ylarod/ddk-min@sha256:272ada1e61c525116032246df2a790d1ccec1804b7a9e0b09203c5e650dcb78e",
+    "source": "src/port510",
+    "ddk_tag": "android12-5.10-20260313"
+  },
+  "6.12": {
+    "kmi": "android16-6.12",
+    "image": "ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a",
+    "source": "src/port",
+    "ddk_tag": "android16-6.12-20260313"
+  },
+  "6.6": {
+    "kmi": "android15-6.6",
+    "image": "ghcr.io/ylarod/ddk-min@sha256:51159bc935c75a282fc65bc87e02f16bd098d1cdf55dc558c4fdd0fcf7a132e2",
+    "source": "src/port66",
+    "ddk_tag": "android15-6.6-20260313"
+  }
+}

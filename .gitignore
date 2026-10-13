@@ -1,0 +1,5 @@
+/out/
+/device-report.txt
+.DS_Store
+
+__pycache__/

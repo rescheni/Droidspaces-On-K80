@@ -1,0 +1,18 @@
+Source: Android common kernel, drivers/base/devtmpfs.c
+DDK: ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a
+Tag: android16-6.12-20260313
+Original source SHA256: 6327b2e7ea1360f4e9e1d70713f50879713639d2606f3d511d76272b36f745dc
+
+Adaptations:
+- Preserve the native singleton tmpfs, device_get_devnode naming, modes, ownership,
+  synchronous worker requests, kernel-node markers and deletion semantics.
+- Late loading uses a private fs_struct/root instead of boot-only init_mount/chroot.
+- The worker retains the authorized loader's credentials for VFS operations;
+  no SELinux policy is changed, and it never runs a userspace command.
+- Validate device_add/device_del prologues before permanent entry replacements.
+- Enumerate existing device kobjects with references, excluding registrations or
+  deletions in progress. Serialize node updates without holding our mutex across
+  driver core callbacks, which may recursively unregister child devices.
+- Device creation/deletion hooks remain pinned until reboot; report errors and
+  initialization readiness through read-only module parameters.
+- Restrict loading to the recorded PLZ110 / canoe kernel and its test kernels.

@@ -1,0 +1,98 @@
+#!/bin/sh
+export PATH=/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+echo 0 > /proc/sys/kernel/kptr_restrict
+echo 'DS_VM: baseline'
+uname -r
+result=0
+params=$(cat /module-params 2>/dev/null)
+if [ -f /gki/common.sh ]; then
+    MODDIR=/gki
+    . /gki/common.sh
+    DS_ABI=profile.abi
+    DS_NOTES=kernel.notes
+    if cmp -s /sys/kernel/notes /gki/kernel/kernel.notes && ds_abi_compatible; then
+        echo 'DS_ABI_PREFLIGHT_PASS: production ABI check and kernel notes'
+    else
+        echo 'DS_ABI_PREFLIGHT_FAIL'
+        result=1
+    fi
+fi
+if unshare -p true; then
+    echo 'DS_VM: baseline unexpectedly supports PID namespaces'
+    result=1
+fi
+if [ -f /native-ipc ]; then
+    unshare -i true || result=1
+    /preexisting-ipc &
+    old_pid=$!
+    for attempt in $(seq 1 20); do
+        [ -f /old-ipc-ready ] && break
+        sleep 1
+    done
+    [ -f /old-ipc-ready ] || result=1
+else
+    if unshare -i true; then
+        echo 'DS_VM: baseline unexpectedly supports IPC namespaces'
+        result=1
+    fi
+fi
+for cycle in 1 2 3; do
+    [ "$result" = 0 ] || break
+    echo "DS_VM: lifecycle cycle $cycle"
+    if ! /load-module /droidspaces_ns.ko "$params"; then
+        result=1
+        break
+    fi
+    if ! rmmod droidspaces_ns; then
+        result=1
+        break
+    fi
+done
+if [ "$result" = 0 ]; then
+    echo 'DS_VM: activating test-kernel hooks'
+    if /load-module /droidspaces_ns.ko "$params activate=1"; then
+        if [ -n "${old_pid:-}" ]; then
+            touch /old-ipc-go
+            wait "$old_pid" || result=1
+            old_pid=""
+        fi
+        /namespaces || result=1
+        if [ -x /namespaces-6.18 ]; then
+            /namespaces-6.18 || result=1
+        fi
+        /pid-lifetimes || result=1
+        if [ -f /no-memfd-policy ]; then
+            echo 'DS_PID_POLICY_SKIP: baseline has no per-namespace memfd execution policy'
+        else
+            /pid-policy || result=1
+        fi
+        /ipc-test || result=1
+        /mqueue-test || result=1
+        # Reclaim caches and allow chained RCU/workqueue destruction to finish.
+        for attempt in $(seq 1 20); do
+            echo 3 > /proc/sys/vm/drop_caches
+            sleep 1
+            pid_live=$(cat /sys/module/droidspaces_ns/parameters/pid_live)
+            ipc_live=$(cat /sys/module/droidspaces_ns/parameters/ipc_live)
+            ipc_tasks=$(cat /sys/module/droidspaces_ns/parameters/ipc_tasks)
+            [ "$pid_live" = 0 ] && [ "$ipc_live" = 0 ] && [ "$ipc_tasks" = 0 ] && break
+        done
+        echo "DS_VM: remaining pid=$pid_live ipc=$ipc_live ipc_tasks=$ipc_tasks"
+        [ "$pid_live" = 0 ] && [ "$ipc_live" = 0 ] && [ "$ipc_tasks" = 0 ] || result=1
+        if rmmod droidspaces_ns; then
+            echo 'DS_VM: active hooks were unexpectedly unloadable'
+            result=1
+        fi
+    else
+        result=1
+    fi
+fi
+if [ -n "${old_pid:-}" ]; then
+    kill "$old_pid"
+    wait "$old_pid"
+fi
+dmesg | grep -E 'droidspaces_ns|BUG:|WARNING:|Oops|unresolved'
+echo "DS_VM_RESULT=$result"
+poweroff -f

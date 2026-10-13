@@ -1,0 +1,130 @@
+{
+  "release": "v0.3.0-zorn",
+  "device": {
+    "name": "Redmi K80 Pro (zorn / 24117RK2CC)",
+    "kmi": "android14-6.1",
+    "kernel_release": "6.1.138-android14-11-g965475777129-mi",
+    "pages": 4096,
+    "btf_sha256": "80a145adb8665abc5fc495250843144f5b006caf43c62a080ea34ca8fa0079bb",
+    "root": "KernelSU (su -> u:r:ksu:s0), ksud insmod available",
+    "selinux": "Enforcing",
+    "missing_config": [
+      "CONFIG_PID_NS",
+      "CONFIG_IPC_NS",
+      "CONFIG_SYSVIPC",
+      "CONFIG_POSIX_MQUEUE",
+      "CONFIG_USER_NS",
+      "CONFIG_DEVTMPFS"
+    ]
+  },
+  "build": {
+    "source": "src/port61full",
+    "ddk_image": "ghcr.io/ylarod/ddk-min@sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3",
+    "ddk_tag": "android14-6.1-20260313",
+    "ddk_release": "6.1.166-dirty",
+    "module_args": "TARGET=namespace PORT_DIR=src/port61full GKI_ANDROID=android14 GKI_VERSION=6.1"
+  },
+  "inputs": {
+    "module": {
+      "path": "out/port61full/droidspaces_ns.ko",
+      "sha256": "6897c2d35021d58d88f368853090a0a7cf883d82500f52e701b4daf8c99c2265"
+    },
+    "probe": {
+      "path": "out/zorn/nsprobe",
+      "sha256": "e89304a4e3aecf0ff765a24922b6227513c904be7d69c81ce24109f3a3700285"
+    },
+    "device_btf": {
+      "path": "out/zorn/device.btf",
+      "sha256": "80a145adb8665abc5fc495250843144f5b006caf43c62a080ea34ca8fa0079bb"
+    },
+    "common.sh": {
+      "path": "kernelsu-zorn/common.sh",
+      "sha256": "a782170a7e04968ba324271c6a65af96f97b177f2007dcee27392608bd43808c"
+    },
+    "device-check": {
+      "path": "out/zorn/device-check.txt",
+      "sha256": "c272464eed45da458183b45cb398ae67136e12aba1bd3d236955a753c8416990"
+    },
+    "device-probe": {
+      "path": "out/zorn/device-probe.txt",
+      "sha256": "9e356bf30633284f0819bcb7078f3269e88921c9edce88844f4b0fd9fc738113"
+    },
+    "device-loader": {
+      "path": "out/zorn/device-loader.txt",
+      "sha256": "08206871d549cf38659705b1025d62c3a66a4330aba7f7ee6578a202471df7a7"
+    }
+  },
+  "sources": {
+    "Makefile": "9a2b1621303b91f3fe0ef9bb691457ddffe41b6c6a244db72ca7a8db0f0552fe",
+    "docs/zorn-6.1.md": "ba14cd13852f83884aa3b37d416148775a8e584b3ca980f63a17aee8c60ad62a",
+    "kernelsu-zorn/customize.sh": "5bd45c079c1a433615ff6823ec82a6ba1a102425d04ce4438ac9a99f43b53070",
+    "kernelsu-zorn/module.prop": "3db756edf4eda2b85fa3664efa3c0ce6d5a69b0b792f0a1ad66ba0c7ea5553fb",
+    "kernelsu-zorn/post-fs-data.sh": "453569d50cf5b2e42955a5fff561318cfa2b4d09031e59779e83b4f254978086",
+    "kernelsu-zorn/service.sh": "7ec24ada186327fd4833c50f7299a695982ec4744c49d69d32ec3c9b97ee2e73",
+    "kernelsu-zorn/skip_mount": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/build-local-ddk.sh": "67cdfef592de56d404a9777ee3fe5289d09e371c88030ddf62fd3578f5033be9",
+    "scripts/collect-zorn-evidence.sh": "287271d73c21c973429a29431f8364614631c4c0bb0ec27feb9a3156f17a198d",
+    "scripts/fix-ddk-hosttools.sh": "7ef0e9993566c2ac8d159de69c97e0e9d1e8f2a194d84b89b6faf6f9ec1e680c",
+    "scripts/package-zorn.py": "3290fc1a20aff38961c0deb8dd34e649d8a2494fed3c8c3dcb1f5d297c0db080",
+    "src/gki-target.h": "4c1461b7553b69900593a0681f7f6e892750472d4564635ab7dea2b1cfba3940",
+    "src/port61full/ORIGIN": "329d198988e7f9b8e5b9a444b8d3676a0ba77f955816f908ec68882ed0b1cc3f",
+    "src/port61full/README.md": "12edfe6d0ac44f6c65b6c40300e3e1e03d849d22cc0af486d9394579b35655f4",
+    "src/port61full/bpf-pidns.c": "c8529950a449ca828eafb31876f9d6b27e13bd636f150cf26f8c9b07d8becb56",
+    "src/port61full/cgroup-pidlist.c": "b836bab1837211170fa73dc4eb47431930176f2c91da50fce0f5662be720c832",
+    "src/port61full/exit.c": "b77e8e921afdaa24ec902b35dc6e094b105a0d145552287003459d5faf8cd6dd",
+    "src/port61full/fork.c": "73f861e23aed7bfa8acec656dfea954d2ac76c53579aa51d9ee06f29e45c673c",
+    "src/port61full/fuse.c": "8db73a76ac960cd58b2cf2236dc7b5937643e3725542641db084b03ebd9284d7",
+    "src/port61full/hooks.c": "88f314df56b3b21d57f6caeb09ccc249276b1c91720d9080167afa05a8edfce2",
+    "src/port61full/ipc-backend.h": "081278ba0a1eb24853fb818acd27f734fc5d18492af93714f88afa5cb3716ec2",
+    "src/port61full/ipc-compat.c": "9e52cc0fff509b4435c0aa278fab69ad8887c1c59655accd3e7fd64c25f17ce1",
+    "src/port61full/ipc-task.c": "de9a4aeac4042fda8d756964dbc2d32a963bcfcd659a7e974789b125dc9f9701",
+    "src/port61full/ipc-util.c": "895f51413ac7d9a29c18c4fabc8da7f456e807a620032d9ba7825058188a8e3a",
+    "src/port61full/ipc-util.h": "5f77c30aed3398f3de6a25f9625d0cf8f25772c61efafcef89348192cd4e7a01",
+    "src/port61full/ipc.c": "b99ba1593f3874014de5ed714e8a9b4df679b88a9e5bbedaa934962fb7e8c68b",
+    "src/port61full/ipc_sysctl.c": "df3aa178618ffaadaa6de9d3a3f6d7f09f5e1d634efbe8435786032fb9b39ea4",
+    "src/port61full/main.c": "1668f2a298c56c0e1d5e6034029f4d172940d2c0ed0904fcee7a7716ac23019e",
+    "src/port61full/memfd.c": "5b1d09ce774330442fcb3c41f22228484920042cb0ec701fd8c35af86dff6e55",
+    "src/port61full/mq_sysctl.c": "730332ee65b8e02dbf36a331ddfa7fc17a70d60bb3364887a0ab2ea4869d64fb",
+    "src/port61full/mqueue.c": "653549817c8736a147e24e950b802bbd60f0a69376f576a70c477730e6519b5e",
+    "src/port61full/msg.c": "c3ac7df2508b106429dfdacb2a44d8580595be5ed8d2ffee7988fe7c120b27ea",
+    "src/port61full/msgutil.c": "ccd12cf16ccc1558faf73703427c81bc16d848d2c5ea3c5c50eb4785cf6717eb",
+    "src/port61full/names.h": "92f0482ff18936fcb3d4912574c0da2651c1754567b269cc30c0083a5adae565",
+    "src/port61full/nsproxy.c": "e5964774c9bca754fc0aff689fca49a7bbbcd1249b4ebf15a2705d0d5271fc8d",
+    "src/port61full/perf-original.S": "e3d01078af7e09defc844d03cfdf0658671d7a69f65caa8c7d7c974b46c53e45",
+    "src/port61full/perf.c": "e7904eeaa5658432da6f7d3d240c5378b6f51bb0dca0711d330a35539651afd0",
+    "src/port61full/pid.c": "791c80dda672f3ce5d57256a010848f63372c25fa92390d1eeee4d9b3c46b50f",
+    "src/port61full/pid_alloc.c": "3f3acf497729324ef9af13a5406e7f731dd9cdbe5039971706090b010e2e9557",
+    "src/port61full/port.h": "f0dc8e2f6d6ff9603ef8604e178b47dd44e0889a06c197de0cc42a2bdc02a3b6",
+    "src/port61full/proc_ns.c": "cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45",
+    "src/port61full/proc_root.c": "13ffaac719e6c715acb9eed8310030d17a3579c96b57c6e3a518bf8db13211ad",
+    "src/port61full/reboot.c": "a8b6747c191f2bbc27a7a94bcd2dd193f3b783467c14e63d137fa83bc81d28b2",
+    "src/port61full/selftest.c": "1911eb85ac9789934711e2939a4afdd2bacd2beefdf35884f9c211644ce8b9b6",
+    "src/port61full/sem.c": "e8d90e49b57b8053fad05bdbe5c8a150afa5250974fecd55dd876a08bc40dd64",
+    "src/port61full/shm.c": "1e4496ec061fcc6031c77f5257278fe7eb8eddea91b170616c5f04fa05e93b6e",
+    "tests/device/build-nsprobe.sh": "8928e3ffe78b5852543f5e0583fa81d86912b02e3c478d4797cfd66b8883b921",
+    "tests/device/nsprobe.c": "81bffa35d6808902df081b96495e0fa2e0f720d8ed745b1db8aabddc05135cfb",
+    "tests/device/zorn-loader-check.sh": "a76eea35c93c9ca34defccc591c9249a1b2b24ebd04a34429493b016b8ad7e27",
+    "tests/module/test_zorn_loader.py": "298dc1232247ab1b2877d659cb93db740755826c19109ef42334499a00822916",
+    "vendor/kallrecon/LICENSE": "d8c320ffc0030d1b096ae4732b50d2b811cf95e9a9b7377c1127b2563e0a0388",
+    "vendor/kallrecon/ORIGIN": "6d9dfd22d835b66739198c9023f516ac41482f4c68fdd15b5ac469e445ac09c8",
+    "vendor/kallrecon/deps.mk": "b85d527d2bd1eacc70eda813ff5ec5d6c83d3096f09ee6d9e2e4b699044f5d1d",
+    "vendor/kallrecon/lib/access.c": "7cded991443efa698c333e9c56e5628898975f7ee26bbbb2a332b2e154808785",
+    "vendor/kallrecon/lib/access.h": "22d709b4bddf7b091756b439f237d8653fb883c4f9e675764918af0ea9f5ef0b",
+    "vendor/kallrecon/lib/anchor.S": "0df06a93fba82c10cf6d457478b35f0d52f9b6fdbf1baf8f9de1e7fba22ce94c",
+    "vendor/kallrecon/lib/core.c": "3fafa906938a80e34cf6636527506b9304c4eca54d80e4ca616340d10066733c",
+    "vendor/kallrecon/lib/core.h": "3939eea827c15ff8d1f00e0681ef7eb9aab3626240373cb7c588504765b56b8e",
+    "vendor/kallrecon/lib/discover.c": "c867d48fabb5e259cfcd228a4c8d717d53550a56ba976253938614e9979e4ab3",
+    "vendor/kallrecon/lib/discover.h": "554c5db4a9a37e64abebfcfb2d8f7db2d274e2f71935ce2822ca78a0b9f2f512",
+    "vendor/kallrecon/lib/fastboot.c": "051455fc5c59be89cd2c6f308bfba6477cce024b92bc2a034a861b9bf33091e5",
+    "vendor/kallrecon/lib/fastboot.h": "df4c87ee9d959f79d91b2757e4d13192f0171872f1c7f5ccea39de5f0c46da59",
+    "vendor/kallrecon/lib/hint.c": "9b6cfe6f86224c1d86e17c02f643910c2ac17d5eadd7456672bbdd395a79571d",
+    "vendor/kallrecon/lib/hint.h": "250b304a97ed384d2f4e07bf5471bb08e40460c2753dd3fb494d9ce88fa867fa",
+    "vendor/kallrecon/lib/ks_dbg.h": "5a36d511e9eed79ff66e52f96f68c68f3efda729b28038e1b278c18a1e3b973d",
+    "vendor/kallrecon/lib/slide.c": "f0362a51bb91135a25839c4b702d87a357020e282f039f372a44060c39156c08",
+    "vendor/kallrecon/lib/slide.h": "83b8fd02553dc7ff51ca6b2219f2f45ed4c515a741ffc073e03db5f70d547bd9",
+    "vendor/kallrecon/lib/symbol.c": "3449fc5e2d6f001920c4514f097cce63c6d4ff9d4d95111e9953ad3c9dced47e",
+    "vendor/kallrecon/lib/symbol.h": "a96f9e52bb98c935f8d631372f4cb71fdd6da258687e510ff045b2db4a0dd175",
+    "vendor/kallrecon/lib/variant.c": "6b96e986382db7c8e6b68661ee538caff59e6bf4edaf3d27e7411723c657c95e",
+    "vendor/kallrecon/lib/variant.h": "d95f7d7b9134558922407ac41224bb4dc66f123ee4f2f5e8bc36ec42b8482b4c"
+  }
+}

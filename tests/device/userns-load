@@ -1,0 +1,35 @@
+#!/system/bin/sh
+# Manual candidate loader; this is not an automatic boot module.
+set -eu
+base=${DS_USERNS_TEST_DIR:-/data/local/tmp/droidspaces-userns-test}
+[ "$(id -u)" = 0 ]
+[ "$(uname -m)" = aarch64 ]
+[ "$(uname -r)" = 6.12.69-android16-6-g242e1a07f878-ab15865446-4k ]
+tr '\000' '\n' < /sys/firmware/devicetree/base/compatible | grep -qx qcom,canoe
+hash=$(sha256sum /sys/kernel/btf/vmlinux)
+[ "${hash%% *}" = 1870e245673b3eaae0d1fdafb0fd7027888b638018ed9561943a51dc2539d6af ]
+[ "$(getenforce)" = Enforcing ]
+cd "$base"
+sha256sum -c SHA256SUMS
+case "${1:---check}" in
+    --check) echo DS_USERNS_DEVICE_PREFLIGHT_PASS; exit 0;;
+    --load) ;;
+    *) exit 2;;
+esac
+[ ! -d /sys/module/droidspaces_ns ] || {
+    echo 'An existing namespace module must be cleared by reboot before this test.' >&2
+    exit 1
+}
+ksud=/data/adb/ksud
+[ -x "$ksud" ] || ksud=/data/adb/ksu/bin/ksud
+[ -x "$ksud" ]
+"$ksud" insmod "$base/droidspaces_ns.ko" activate=1 userns_device_test=1
+[ "$(cat /sys/module/droidspaces_ns/parameters/activate)" = Y ]
+[ "$(cat /sys/module/droidspaces_ns/parameters/userns_device_test)" = Y ]
+[ -e /proc/self/ns/user ]
+if [ ! -d /sys/module/droidspaces_devtmpfs ]; then
+    "$ksud" insmod "$base/droidspaces_devtmpfs.ko"
+fi
+[ "$(cat /sys/module/droidspaces_devtmpfs/parameters/ready)" = Y ]
+[ "$(cat /sys/module/droidspaces_devtmpfs/parameters/errors)" = 0 ]
+echo DS_USERNS_DEVICE_LOADED

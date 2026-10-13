@@ -1,0 +1,41 @@
+Android 13 / Linux 5.15 GKI namespace port
+
+Pinned DDK: ghcr.io/ylarod/ddk-min@sha256:9e68cd9fcab748584755d31ba88ef134efc938dbde17f258c2652315f6cd81cd
+Tag: android13-5.15-20260313
+Native source directory: /opt/ddk/src/android13-5.15
+Kernel release: 5.15.202-android13-5.15.202_r00-dirty
+Configuration: PID_NS=n, SYSVIPC=n, POSIX_MQUEUE=n, 4K pages,
+classic Clang CFI, full LTO, ARM64 BTI and shadow call stack.
+
+The 6.6 transplantation was merged with this DDK's native 5.15 sources.
+Native baseline source SHA-256:
+4870c2dd67ecd06ec7d19c02791f0913692d2a61c5b606ea9c849e0da0726b98  kernel/pid_namespace.c
+babb64b2f3330f26a8904886e24371f9967f3cabb74e2713eedebd259d9b461d  ipc/namespace.c
+b4d9ce1775454f9809731b7844c452b7b810f67fd4c3d445f053deb5cd9926e6  kernel/nsproxy.c
+61381ebc3ce1e75fd08c67cce9646f1c8e1c843984a0b6059c8eff4b3501e58e  kernel/pid.c
+8824a2398e4b0e4f39c834cfef81489e783d95c19e12613a3c34c974da57baca  kernel/exit.c
+cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45  fs/proc/namespaces.c
+d3a44d33afaad29c740557bf9223a2e97c325b05e02391e84d5ce3b71f808d55  fs/proc/root.c
+2692cb37f7db9eb162be60b9344def827a65a1d8a35c880d2e08c4de29d3ad4b  ipc/util.h
+6b5787ea2140c31483a6392ea8b6fcc7cbe2dafcbe76c7b8d2a2ec310bb40c78  ipc/util.c
+6d60719799bbcdfe547e3979080f4c52da617367027119b8a15ddd2187bb2f65  ipc/compat.c
+e870d5d5be5a53d5650be0b0b2d1992b0a3e23dffc06231d9a232d982c66809f  kernel/fork.c
+608bda92a0aca42216c4555210aa845ba15b2c5bd935355e668e2b09d394637a  fs/fuse/inode.c
+15badc69a8665a5d663c4ae7b15fe57e271dcdb4494e9141538d23a3adda170a  kernel/cgroup/cgroup-v1.c
+14f57b84d12e4c124ff8221d748cf42e1ccc8decc315c1c3d108efe5e20c1a4e  kernel/bpf/task_iter.c
+736a993ce410e4ff17ad123d691b5a3bfc831a082974376942870f3a5c2dfabc  ipc/msg.c
+1dd68f708a43a30afa123d71f2c25bee1dad2d70a2f94c78f9907706a68f6510  ipc/msgutil.c
+a6ac85f6830613e96b6b3aa6e67f5b4af59cf9491ba7b101071010c3dad81a53  ipc/sem.c
+8f0c9d1e84c52899f76dbf1a1b4fa3520abbddbd5034a25ad93202aeb758757f  ipc/shm.c
+667d1750f1db35e4f504e2966b065d711502e61ef63ad44cc118e10c5ca0ded5  ipc/mqueue.c
+80ae7b5ac287aac470e38b70e0d0fffb24c16c771ba91d37d420810090ce2de5  ipc/mq_sysctl.c
+3d74ea7c2950a268a4bca18b118597ad2265eaced774238edaecb87291cb488f  ipc/ipc_sysctl.c
+
+Adaptations:
+- Module-owned PID/IPC namespaces, SysV and POSIX message queues.
+- Preserve 5.15's IPC sysctl offset handlers and global table lifecycle.
+- Classic CFI callback jump tables remain enforced; direct body hooks and
+  BTI-compatible trampolines preserve shadow-call-stack and PAC prologues.
+- FUSE reference release is attached to fuse_free_conn, also used by virtio-fs.
+- No per-namespace memfd policy or pidfd namespace ioctl exists in this baseline.
+- SHM_HUGETLB and 32-bit IPC remain unsupported.

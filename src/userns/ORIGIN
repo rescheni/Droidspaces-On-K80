@@ -1,0 +1,161 @@
+Source: Android common kernel, kernel/user_namespace.c
+DDK: ghcr.io/ylarod/ddk-min@sha256:4dd088dc94b391c926cf09215e0a5958f3dfe7d8eeed3616f9041224f85b1d1a
+Original source SHA256: 1ee1a746ea8e1ba1d3316c2500b3fe305adc0447e8526e745eab0dc6f3aa061f
+
+Additional source: Android common kernel, kernel/cred.c
+Original credential source SHA256: 69b4dde11eb4eba9958c0c9bd4d83ac71476c9de25c2cc46b6cc818c9c4f8536
+
+Adaptations:
+- Prefix user namespace definitions to keep them separate from native symbols.
+- Replace the boot initcall with explicit slab/workqueue initialization and cleanup.
+- Track private namespaces, use a dedicated destruction workqueue, and drain
+  private credential RCU callbacks before draining namespace work at teardown.
+- Port credential duplication and release with user namespace reference handling.
+  The isolated core target owns private copies. USERNS=1 additionally replaces
+  native prepare/copy/free entry points and the native RCU callback, sharing the
+  native slab; init_user_ns is treated as immortal for pre-activation objects.
+- Provide QEMU-only test endpoints under /proc/ds_userns_test. They exercise the
+  upstream map-write implementation and permission checks without adding
+  /proc/<pid>/uid_map, switching a task namespace, or patching native entries.
+- Require one of the two recorded 6.12 VM kernels and linux,dummy-virt.
+  This restriction applies to TARGET=userns; the live target is described below.
+
+Additional source: Android common kernel, kernel/utsname.c
+Original UTS source SHA256: 436508ed5990edb5f032df8ad5963c537ed74d405c6f41b7375eed1486b921ca
+- Isolated target: independent UTS slab and private objects. Live VM target:
+  shared native UTS slab with prefixed copy/free operations and owner references.
+
+Live VM target (TARGET=namespace USERNS=1):
+- Connect the user namespace implementation to the existing PID/IPC task paths.
+- Restore native proc mapping entries while preserving the target's directory
+  tables, including vendor entries and validated alignment padding.
+- Share native ucounts state and replace accounting paths with inline releases.
+- Restore mount namespace, fs_context and superblock user ownership/lifetimes,
+  including statmount/listmount and sget/sget_fc inline destruction paths.
+- Restore arm64 identity/group syscalls and stat/statx mapping at output.
+- Keep native filesystem and LSM callbacks and permission checks.
+- Test real nonprivileged tasks in QEMU. Live hardware testing requires the
+  exact recorded PLZ110 kernel and explicit userns_device_test=1; the manual
+  loader also checks the complete BTF fingerprint and payload hashes.
+  Hardware validation and release remain pending.
+
+Additional pinned DDK source hashes:
+kernel/ucount.c bccd471b035449aca9416f6dc7d3a85d2503c4edac0df183d2e83415fc6519ca
+fs/proc/base.c b4692c10f02ed29b62ea3463f2491e461f51b63a8262f3554eda92231f1ef003
+fs/namespace.c af7a59e60bb8abd5e6ac3979acd844307aa522a1f4b82a6dfaec9e4ddfbe707f
+fs/fs_context.c 8e4d343563b0a6f7540eccb958d749fd704bed030852081ebde63c843c6c425d
+fs/super.c 2188e80fd21219379bf10e4bb6d7fe9a31e41d350390fafa1bba364169f4607c
+kernel/sys.c 24f4a0073a35b14906fcdb99a96e9e2a473f356b6e97b648691979a7a4d9f6ef
+kernel/groups.c 291143c91266a69bc84216d7ea58597647cbbaa3ba400c79237b59dfd024b3ce
+fs/stat.c 53cafc68502adbf426a7d38827bbb52e0cb4b57c0cc772a759073706964fb587
+include/linux/user_namespace.h 4aa7d8fd93f3ee93da17b384820deaf27e7b77cd00796ed9d60bebdbc87aab72
+
+Capability and exec/mm integration:
+- Port namespace-aware set-ID capability transitions, exec capability calculation
+  and file capability reads from commoncap.c; retain the normal LSM dispatch.
+- Port begin_new_exec's inlined helpers and would_dump to restore unmapped
+  set-ID rejection and mm namespace bounds, including non-leader thread exec.
+- Wrap the checked native mm_init prologue, recovering ownership from zeroed or
+  copied input objects because the USER_NS argument is compiled out at callers.
+  Port __mmdrop with its native checks, Android hooks and namespace release.
+- Runtime tests cover mapped/unmapped set-ID, keepcaps, no-new-privs, mm ptrace,
+  non-leader thread exec, setns ancestry and an actual Bubblewrap workload.
+security/commoncap.c f8dba4df187cd446bc336dfeed000b41bdd0a9afd8b8d985d9c9d502cec587d7
+fs/exec.c 2c0f1edc537abe68111e36a3e4ffb1b8fc57607ed8f216acfa1f621784817dd5
+kernel/fork.c 3b1374fe8a7a3a46bcbcbf41e2b1b88deb0f6f898f49ab2cc41dd8a242aad5a2
+
+VFS, proc, nsfs and namespace ownership integration:
+- Restore namespace-aware access/chown/chroot and inode capability policy.
+- Convert both file capability reads and writes; test v3 root IDs on ext4 and
+  confirm the same executable cannot elevate an ordinary host user.
+- Keep the native user sysctl table and replace lookup/visibility semantics;
+  use a checked callback pointer for the 12-byte lookup function.
+- Restore proc status's opener identity view and cgroup/time ownership and
+  lifetime handling, including inlined time namespace put callers.
+- Restore sysfs context and network inode ownership; resolve sysfs_root via
+  sysfs_root_kn to avoid duplicate private symbol names.
+- Wrap nsfs ioctls with a checked original prologue; handle USER_NS-dependent
+  queries and keep other native operations.
+- Short entry patches use 12-byte ADRP/ADD/BR only within architectural range;
+  never touch an adjacent KCFI prefix. Smaller entries are rejected.
+fs/open.c dde41931c625e7eeff9c383af5bf55d40c3450e4c74e43d25352cf353d2b1874
+kernel/capability.c 3efa66fe89f42326bdacc61360dc6c26d29cb8fb7e0b0fd671c030e0465c82e8
+fs/inode.c 05f309ce7b528600851e52fbf676e78b93691c0512da0815722041517279deda
+fs/nsfs.c 00352d816aada15622fae9da72b7c749abc26539534cbe649ef4f4a172784080
+fs/proc/array.c 6ca3167e03a2adb7eb512489d40722023344cd779a6cf039419f7a1be936194a
+net/core/net_namespace.c f8d38b152ccf6718677ecf474bf89b9a864eca08700991dd40e5d9b13a1e1cdc
+kernel/cgroup/namespace.c b397809e577a47c34a0deca7647d62881e78ca7214ef52b98d0120a8475a395d
+fs/sysfs/mount.c eba2b807927f672cff64c58663ff5d02ffe29c604ef3e3223229e7a3b88837cb
+kernel/time/namespace.c 031af678ed780aa2125e5b7cc490362f9013756e37c2a79227dfb73ffd654d4b
+
+Socket credential integration:
+- Wrap native sk_getsockopt through its checked original prologue; restore
+  SO_PEERCRED and SO_PEERGROUPS mappings and retain all other options.
+- Port __scm_send credential validation and FD bookkeeping without relaxing
+  forged-identity, unmapped-ID, io_uring or LSM restrictions.
+- Port Unix stream/datagram/seqpacket receive paths and Netlink receive to
+  restore inlined SCM_CREDENTIALS mapping. Include both Unix datagram callers
+  because the PLZ110 compiler inlines __unix_dgram_recvmsg into them.
+- Test local/cross-namespace identities, supplementary groups, rejected forged
+  credentials, and SCM_RIGHTS peek, close-on-exec and truncated-control cleanup.
+net/core/sock.c b21109ba79a53d7f2bfbf984ddd92bd2cf746b1562b0e5ed8283f66f130b63f9
+net/core/scm.c 5effc14f500ec38f0227ae596d78fb3ffc9b6a5d6cc2852b130f62b53b6eea0f
+include/net/scm.h 9f391c256fd525f3f3517a772a1e3c7fdde8eb7237bb7aa1271eecffe39a4235
+net/unix/af_unix.c ab0262c8202f028907d9dee08e1d400d8433273b249fcf9dbcc5eb07adb302b7
+net/netlink/af_netlink.c 8e38304ca5e3f82d1167e59c28cd6fd6a4168c1f6e11e915e4959eb4be0e8079
+
+Credential and cgroup context ownership follow-up:
+- Port key_change_session_keyring so the task-work callback preserves the
+  parent's user namespace and its reference while retaining key/LSM handling.
+- Port cgroup_init_fs_context so its namespace transfer releases the previous
+  context owner and acquires the cgroup namespace owner.
+- Regress both against the unmodified paths: keyring replacement changed the
+  parent namespace; cgroup fsopen/close retained a namespace after task exit.
+- Exercise 32 pairs of competing mapping writes against concurrent task exits;
+  retained map FDs remain usable, one writer wins, and all references drain.
+security/keys/process_keys.c 8a85fb472e554a3e68083344354bd3928d15592b67e444860f19e8c35f5eeabd
+kernel/cgroup/cgroup.c 2df0586cdb1516bb9f64c0c8f56f8628a3d77369feb6a6a615352c7f9ea64be8
+
+PLZ110 hardware coexistence:
+- For the observed HMA UID Fake 0.4.0+1c71b6c setuid inline hook, retain its
+  entry, wrapper and original trampoline. After exact instruction, destination
+  and CFI checks, redirect the native +4 resume body to our capability handler.
+  No HMA code is copied or shipped; its unknown hook layouts remain rejected.
+- src/health/userns.c is an original bounded boot check: drop to UID/GID 1000,
+  create a user namespace, reject a host-root map, map the caller, reject host
+  setns, and create a private UTS namespace. It does not change global policy.
+
+FUSE boot-crash correction (v0.1.3):
+- Native fuse_conn_init callers omit the unused user_ns argument when the host
+  has CONFIG_USER_NS=n. Preserve their initial-namespace ownership instead of
+  dereferencing that argument after enabling USER_NS in the LKM translation unit.
+- Wrap fuse_get_tree with a checked native trampoline and reject noninitial
+  fs_context owners with EOPNOTSUPP. FUSE's other inlined !USER_NS conversions
+  are not yet ported, so sandbox-created FUSE mounts must not be assigned host
+  ownership. Existing host FUSE mounts, including Android emulated storage,
+  retain native behavior. New host mounts and teardown get explicit regressions.
+
+Sandbox-created FUSE mounts (v0.1.4):
+- live-fuse.c ports fuse_get_tree, parse/show options and child connection setup.
+  Keep the checked native trampoline for host mounts and never read the unused
+  native fuse_conn_init user_ns argument; assign the child owner explicitly.
+- live-fuse-request.c ports request credential conversion, shares native request
+  allocation/freeing, and wraps forced queueing for child UID/GID mappings.
+- live-fuse-inode.c and live-fuse-dir.c port attribute, permission, setattr and
+  creation paths whose CONFIG_USER_NS=n conversions were inlined by the host.
+  Port fuse_do_getattr privately: the native static function drops its first
+  parameter, so its compiled calling convention differs from its C prototype.
+- live-fuse-acl.c ports FUSE/VFS ACL identity conversion for child FUSE only;
+  native trampolines retain other filesystems' paths and existing LSM checks.
+- Child connections reject Android FUSE-BPF backing/extra LOOKUP responses,
+  no_daemon and fuseblk; mask passthrough/idmapped-mount INIT negotiation in
+  both directions. Host connections retain native extension handling.
+- Retain the original mount-owner, device-FD-owner and access checks, including
+  allow_other namespace ancestry and native allow_sys_admin_access semantics.
+- New source files derive from the same pinned DDK above, with original hashes:
+fs/fuse/inode.c 1b6d43798c2a32aeaea17476b402f7a1fe124a7dc8cc4227ee3a689619d9a8ed
+fs/fuse/dev.c 45fb2604986f4f6b6dfc4adbd6dfb718871fc9712d67b84a95b0963ef1b5e3ba
+fs/fuse/dir.c fa73442343c4b730eece321ff0118758e50d78ab25db474f4d247814cffd1c2a
+fs/fuse/acl.c f741aae90fa29a6ff85f25431c75d6c047095b2bc9565254b97007436ce431e1
+fs/fuse/fuse_i.h 9dd94f5ea11aaa88aebc3f0dfcdfd8e06535dd1db54db07cc61ec5ada58253eb
+fs/posix_acl.c 487f64867780289cf2b192baa89aeb17318cfe06e77962f37b19bf558ec57f83

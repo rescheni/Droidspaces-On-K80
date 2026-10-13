@@ -1,0 +1,46 @@
+Android 12 / Linux 5.10 GKI namespace port
+
+Pinned DDK: ghcr.io/ylarod/ddk-min@sha256:272ada1e61c525116032246df2a790d1ccec1804b7a9e0b09203c5e650dcb78e
+Tag: android12-5.10-20260313
+Native source directory: /opt/ddk/src/android12-5.10
+Kernel release: 5.10.252-dirty
+Configuration: PID_NS=n, SYSVIPC=n, POSIX_MQUEUE=n, DEBUG_INFO_BTF=n,
+4K pages, classic Clang CFI, full LTO, ARM64 BTI and shadow call stack.
+
+The 5.15 port was merged with the pinned native 5.10 sources.
+Native source SHA-256:
+0cfdac0221804b553721feeeef4e7b5cf5386001a73895b684c74fd772efe787  kernel/pid_namespace.c
+e5b7157b83144234df7b30da096d31ba6105238dce642c242e1789d56d164e3b  ipc/namespace.c
+d90635841d017fb67d02e5d05f92e8185f2eca45f06a0b7eba32577af6789aad  kernel/nsproxy.c
+fe67d8d25b9db1fdf09ac2a997bf4d51af85767794fd982fb0787e9af3b564e4  kernel/pid.c
+e81c58332835633bda87d01ca779650889184f48b9fb9251b809456c221df188  kernel/exit.c
+cc38b0cd358741199f25ecb99487caf46e3794bc8d444dd777791b7c1d49fb45  fs/proc/namespaces.c
+c780efe3af732e428395bafd611de17d1cb2b46ca5334766ea7dab486a3d254e  fs/proc/root.c
+613efa25b445e38977b6b29107f50f3bf3727cdeb0ecd61ba7b003be2f1a78f6  ipc/util.h
+373f81ac88c9d8498f1afe4445ec6296966816addd5e4cb900a3dce4b8b6c0d5  ipc/util.c
+6d60719799bbcdfe547e3979080f4c52da617367027119b8a15ddd2187bb2f65  ipc/compat.c
+e6adce8f5d83eb523fcae30895addf01fa1e5f0e89091c4916316545a96175da  kernel/fork.c
+25c6a4c4e59449f9a37625afe8fab4f7f9b5d2ad8bb7e387dd63371240aed85e  fs/fuse/inode.c
+3c580c3440fa06380be3a3fc183ea3ef97839fe256b6b5265bf0757715f47a29  kernel/cgroup/cgroup-v1.c
+1115112442f8200ff4a165e924314e13715e1b47fbd0df6d64a5e124d5813892  kernel/bpf/task_iter.c
+da5b6a1e4a5de71421275ae16b1cac56230f4d8d05f4f40b8a2a650c554f371b  ipc/msg.c
+be8da322e50491c316d90e0f92e82ab2a47bf29c375356ffe1b9dce4fd8750e5  ipc/msgutil.c
+ad8dc54eeb049977aef9ef70cb9d2d2bfc4eba6983007ba5418261157758e688  ipc/sem.c
+26e24c981e7a8639262c07dcdf0f366441af9df2d0e8c8cac38fafb727a96523  ipc/shm.c
+97b970797a16fcd75f205a3fd005e1630196d3bc4ac98d8c7a6eae6e77405076  ipc/mqueue.c
+80ae7b5ac287aac470e38b70e0d0fffb24c16c771ba91d37d420810090ce2de5  ipc/mq_sysctl.c
+3d74ea7c2950a268a4bca18b118597ad2265eaced774238edaecb87291cb488f  ipc/ipc_sysctl.c
+
+Adaptations:
+- Separate PID kref and IPC count fields; preserve 5.10 namespace lifecycle.
+- SysV, POSIX queues and native offset-based IPC sysctl handlers.
+- Validate anonymous classic-CFI callback jump tables by their branch targets.
+- Use temporary fixmap aliases for native rodata tables, as the 5.10 instruction
+  patch helper only supports kernel text and module vmalloc addresses.
+- Two native BPF iterator callback pairs; this baseline lacks task_vma iteration
+  and runtime BTF needed for userspace tracing-program loading.
+- Preserve native FUSE initialization and release PID references in fuse_free_conn.
+- No native memfd namespace policy or pidfd namespace ioctl; SHM_HUGETLB and
+  32-bit IPC are not supported.
+- Reference BTF is generated from DDK DWARF. If runtime BTF is unavailable,
+  automatic loading requires the exact validated kernel notes/build fingerprint.

@@ -1,0 +1,36 @@
+#!/bin/sh
+export PATH=/bin
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+echo 0 > /proc/sys/kernel/kptr_restrict
+run_tests() {
+    if test -f /namespaces.ko; then
+        /load-module /namespaces.ko "$(cat /ns-params)" || return 1
+    fi
+    if test -f /devtmpfs.ko; then
+        /load-module /devtmpfs.ko || return 1
+        test "$(cat /sys/module/droidspaces_devtmpfs/parameters/ready)" = Y || return 1
+        test "$(cat /sys/module/droidspaces_devtmpfs/parameters/errors)" = 0 || return 1
+    fi
+    /load-module /userns.ko || return 1
+    /userns-core-test || return 1
+    rmmod droidspaces_userns_test || return 1
+    test ! -e /proc/ds_userns_test || return 1
+    # A second cycle exercises complete cleanup, including sysctls and slab cache.
+    /load-module /userns.ko || return 1
+    /userns-core-test || return 1
+    rmmod droidspaces_userns_test || return 1
+    test ! -e /proc/ds_userns_test || return 1
+    if test -f /namespaces.ko; then
+        unshare -ip true || return 1
+        echo DS_USERNS_PID_IPC_COEXIST_PASS
+    fi
+    if test -f /devtmpfs.ko; then
+        test "$(cat /sys/module/droidspaces_devtmpfs/parameters/errors)" = 0 || return 1
+        echo DS_USERNS_DEVTMPFS_COEXIST_PASS
+    fi
+}
+run_tests
+result=$?
+echo "DS_USERNS_CORE_VM_RESULT=$result"
+poweroff -f
